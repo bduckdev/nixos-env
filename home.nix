@@ -6,10 +6,13 @@ dotfiles = "${config.home.homeDirectory}/nixos-env/config";
 assets = "${config.home.homeDirectory}/nixos-env/assets";
 create_symlink = path: config.lib.file.mkOutOfStoreSymlink path;
 configs = {
-    nvim = "nvim";
-    noctalia = "noctalia";
+    bat = "bat";
+    delta = "delta";
+    lazygit = "lazygit";
     kitty = "kitty";
     mango = "mango";
+    noctalia = "noctalia";
+    nvim = "nvim";
     yazit = "yazi";
 };
 in
@@ -54,6 +57,9 @@ in
         };
         shellAliases.ls = "lsd";
         shellAliases.ll = "lsd -alF";
+        initContent = ''
+        bindkey -s ^g "lazygit\n"
+        '';
 
     };
     programs.starship.enable = true;
@@ -64,9 +70,11 @@ in
 
 
     home.packages = with pkgs; [
-        clang
+            bat
+            clang
             clang-tools
             cmake
+            delta
             discord
             firefox
             fzf
