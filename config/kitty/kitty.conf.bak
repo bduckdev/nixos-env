@@ -1,0 +1,47 @@
+font_family JetBrains Mono Nerd Font
+font_size 16
+
+shell_integration no-rc
+
+allow_remote_control yes
+background_opacity 0.75
+confirm_os_window_close 0
+cursor_shape block
+cursor_trail 1
+cursor_trail_color #5EF1FF
+cursor_trail_start_threshold 1
+enable_audio_bell no
+pixel_scroll no
+scrollbar never
+window_padding_width 8
+
+map ctrl+backspace send_text all \x17
+
+background #16181a
+foreground #ffffff
+cursor #ffffff
+cursor_text_color #16181a
+selection_background #3c4048
+selection_foreground #ffffff
+color0 #16181a
+color1 #ff6e5e
+color2 #5eff6c
+color3 #f1ff5e
+color4 #5ea1ff
+color5 #bd5eff
+color6 #5ef1ff
+color7 #ffffff
+color8 #3c4048
+color9 #ff6e5e
+color10 #5eff6c
+color11 #f1ff5e
+color12 #5ea1ff
+color13 #bd5eff
+color14 #5ef1ff
+color15 #ffffff
+active_tab_foreground #000000
+active_tab_background #ffbd5e
+inactive_tab_foreground #ffffff
+inactive_tab_background #16181a
+
+
