@@ -1,79 +1,95 @@
-{ config, pkgs, inputs,  ... }:
+{
+  config,
+  pkgs,
+  inputs,
+  ...
+}:
 
 {
-	imports = [
-		./hardware-configuration.nix
-	];
+  imports = [
+    ./hardware-configuration.nix
+  ];
 
-	boot.loader.systemd-boot.enable = true;
-	boot.loader.efi.canTouchEfiVariables = true;
+  boot.loader.systemd-boot.enable = true;
+  boot.loader.efi.canTouchEfiVariables = true;
 
-	networking.hostName = "nixos";
-	networking.networkmanager.enable = true;
+  networking.hostName = "nixos";
+  networking.networkmanager.enable = true;
 
-	time.timeZone = "America/New_York";
+  time.timeZone = "America/New_York";
 
-	i18n.defaultLocale = "en_US.UTF-8";
-	i18n.extraLocaleSettings = {
-		LC_ADDRESS = "en_US.UTF-8";
-		LC_IDENTIFICATION = "en_US.UTF-8";
-		LC_MEASUREMENT = "en_US.UTF-8";
-		LC_MONETARY = "en_US.UTF-8";
-		LC_NAME = "en_US.UTF-8";
-		LC_NUMERIC = "en_US.UTF-8";
-		LC_PAPER = "en_US.UTF-8";
-		LC_TELEPHONE = "en_US.UTF-8";
-		LC_TIME = "en_US.UTF-8";
-	};
+  i18n.defaultLocale = "en_US.UTF-8";
+  i18n.extraLocaleSettings = {
+    LC_ADDRESS = "en_US.UTF-8";
+    LC_IDENTIFICATION = "en_US.UTF-8";
+    LC_MEASUREMENT = "en_US.UTF-8";
+    LC_MONETARY = "en_US.UTF-8";
+    LC_NAME = "en_US.UTF-8";
+    LC_NUMERIC = "en_US.UTF-8";
+    LC_PAPER = "en_US.UTF-8";
+    LC_TELEPHONE = "en_US.UTF-8";
+    LC_TIME = "en_US.UTF-8";
+  };
 
-	services.xserver = {
-		enable = true;
-		xkb = {
-			layout = "us";
-			variant = "";
-		};
-	};
+  services = {
+    xserver = {
+      enable = true;
+      xkb = {
+        layout = "us";
+        variant = "";
+      };
+    };
 
-	services.displayManager.gdm.enable = true;
-	services.desktopManager.gnome.enable = true;
-	services.printing.enable = true;
+    displayManager.gdm.enable = true;
+    desktopManager.gnome.enable = true;
+    printing.enable = true;
 
-	services.pulseaudio.enable = false;
-	security.rtkit.enable = true;
-	services.pipewire = {
-		enable = true;
-		alsa.enable = true;
-		alsa.support32Bit = true;
-		pulse.enable = true;
-	};
+    pulseaudio.enable = false;
+    pipewire = {
+      enable = true;
+      alsa.enable = true;
+      alsa.support32Bit = true;
+      pulse.enable = true;
+    };
+  };
 
-	users.users.bduck = {
-		isNormalUser = true;
-		description = "Brennan Duck";
-		extraGroups = [ "networkmanager" "wheel" ];
-		shell = pkgs.zsh;
-	};
+  security.rtkit.enable = true;
 
-    programs.mango.enable = true;
-    programs.noctalia.enable = true;
-	programs.steam.enable = true;
-	programs.zsh.enable = true;
-
-    environment.systemPackages = [
-     inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default
+  users.users.bduck = {
+    isNormalUser = true;
+    description = "Brennan Duck";
+    extraGroups = [
+      "networkmanager"
+      "wheel"
     ];
+    shell = pkgs.zsh;
+  };
 
-	# Nixpkgs installs Mango's fallback config in the package output, but does
-	# not link it into /etc. Expose it at the path Mango documents and checks.
-	environment.etc."mango/config.conf".source =
-		"${config.programs.mango.package}/etc/mango/config.conf";
+  programs = {
+    mango.enable = true;
+    noctalia.enable = true;
+    steam.enable = true;
+    zsh.enable = true;
+  };
 
-	nixpkgs.config.allowUnfree = true;
-	nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  environment.systemPackages = [
+    inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default
+  ];
 
-	fonts.packages = [
-		pkgs.nerd-fonts.jetbrains-mono
-	];
+  # Nixpkgs installs Mango's fallback config in the package output, but does
+  # not link it into /etc. Expose it at the path Mango documents and checks.
+  environment.etc."mango/config.conf".source =
+    "${config.programs.mango.package}/etc/mango/config.conf";
 
-	system.stateVersion = "26.05"; # Keep the version from the first install.
+  nixpkgs.config.allowUnfree = true;
+  nix.settings.experimental-features = [
+    "nix-command"
+    "flakes"
+  ];
+
+  fonts.packages = [
+    pkgs.nerd-fonts.jetbrains-mono
+  ];
+
+  system.stateVersion = "26.05"; # Keep the version from the first install.
 }
