@@ -2,14 +2,14 @@ vim.g.mapleader = " "
 -- oil-like navigation
 vim.keymap.set("n", "\\", vim.cmd.Ex)
 vim.api.nvim_create_autocmd("FileType", {
-  pattern = "netrw",
-  callback = function()
-    vim.keymap.set("n", "\\", "-", {
-      buffer = true,
-      remap = true,
-      desc = "Netrw: go up directory",
-    })
-  end,
+	pattern = "netrw",
+	callback = function()
+		vim.keymap.set("n", "\\", "-", {
+			buffer = true,
+			remap = true,
+			desc = "Netrw: go up directory",
+		})
+	end,
 })
 
 vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")

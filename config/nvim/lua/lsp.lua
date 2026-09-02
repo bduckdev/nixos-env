@@ -37,80 +37,160 @@ do
 	end
 end
 
-local function lsp_on_attach(ev)
-	local client = vim.lsp.get_client_by_id(ev.data.client_id)
-	if not client then
-		return
-	end
+local augroup = vim.api.nvim_create_augroup("my.lsp", { clear = true })
 
-	local bufnr = ev.buf
-	local opts = { noremap = true, silent = true, buffer = bufnr }
+vim.api.nvim_create_autocmd("LspAttach", {
+	group = augroup,
+	callback = function(args)
+		local opts = { buffer = args.buf }
+		vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
+		vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
+		vim.keymap.set("n", "<leader>vws", vim.lsp.buf.workspace_symbol, opts)
+		vim.keymap.set("n", "<leader>vca", vim.lsp.buf.code_action, opts)
+		vim.keymap.set("n", "<leader>vrr", vim.lsp.buf.references, opts)
+		vim.keymap.set("n", "<leader>vrn", vim.lsp.buf.rename, opts)
+		vim.keymap.set("i", "<C-h>", vim.lsp.buf.signature_help, opts)
+	end,
+})
 
-	vim.keymap.set("n", "<leader>gd", function()
-		require("fzf-lua").lsp_definitions({ jump_to_single_result = true })
-	end, opts)
+vim.keymap.set("n", "<leader>vd", vim.diagnostic.open_float, {})
+vim.keymap.set("n", "]d", function()
+	vim.diagnostic.jump({ count = 1 })
+end, {})
+vim.keymap.set("n", "[d", function()
+	vim.diagnostic.jump({ count = -1 })
+end, {})
 
-	vim.keymap.set("n", "<leader>gD", vim.lsp.buf.definition, opts)
+vim.api.nvim_create_autocmd("BufWritePre", {
+	group = augroup,
+	pattern = {
+		"*.lua",
+		"*.py",
+		"*.go",
+		"*.js",
+		"*.jsx",
+		"*.ts",
+		"*.tsx",
+		"*.json",
+		"*.css",
+		"*.scss",
+		"*.html",
+		"*.sh",
+		"*.bash",
+		"*.zsh",
+		"*.c",
+		"*.cpp",
+		"*.h",
+		"*.hpp",
+        "*.nix",
+	},
+	callback = function(args)
+		-- avoid formatting non-file buffers (helps prevent weird write prompts)
+		if vim.bo[args.buf].buftype ~= "" then
+			return
+		end
+		if not vim.bo[args.buf].modifiable then
+			return
+		end
+		if vim.api.nvim_buf_get_name(args.buf) == "" then
+			return
+		end
 
-	vim.keymap.set("n", "<leader>gS", function()
-		vim.cmd("vsplit")
-		vim.lsp.buf.definition()
-	end, opts)
+		local has_efm = false
+		for _, c in ipairs(vim.lsp.get_clients({ bufnr = args.buf })) do
+			if c.name == "efm" then
+				has_efm = true
+				break
+			end
+		end
+		if not has_efm then
+			return
+		end
 
-	vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, opts)
-	vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
+		pcall(vim.lsp.buf.format, {
+			bufnr = args.buf,
+			timeout_ms = 2000,
+			filter = function(c)
+				return c.name == "efm"
+			end,
+		})
+	end,
+})
 
-	vim.keymap.set("n", "<leader>D", function()
-		vim.diagnostic.open_float({ scope = "line" })
-	end, opts)
-	vim.keymap.set("n", "<leader>d", function()
-		vim.diagnostic.open_float({ scope = "cursor" })
-	end, opts)
-	vim.keymap.set("n", "<leader>nd", function()
-		vim.diagnostic.jump({ count = 1 })
-	end, opts)
+vim.lsp.config("lua_ls", {
+	settings = {
+		Lua = {
+			diagnostics = { globals = { "vim" } },
+		},
+	},
+})
+local luacheck = require("efmls-configs.linters.luacheck")
+local stylua = require("efmls-configs.formatters.stylua")
 
-	vim.keymap.set("n", "<leader>pd", function()
-		vim.diagnostic.jump({ count = -1 })
-	end, opts)
+local ruff_lint = require("efmls-configs.linters.ruff")
+local ruff_format = require("efmls-configs.formatters.ruff")
 
-	vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
+local prettier_d = require("efmls-configs.formatters.prettier_d")
+local eslint_d = require("efmls-configs.linters.eslint_d")
 
-	vim.keymap.set("n", "<leader>fr", function()
-		require("fzf-lua").lsp_references()
-	end, opts)
-	vim.keymap.set("n", "<leader>ft", function()
-		require("fzf-lua").lsp_typedefs()
-	end, opts)
-	vim.keymap.set("n", "<leader>fs", function()
-		require("fzf-lua").lsp_document_symbols()
-	end, opts)
-	vim.keymap.set("n", "<leader>fw", function()
-		require("fzf-lua").lsp_workspace_symbols()
-	end, opts)
-	vim.keymap.set("n", "<leader>fi", function()
-		require("fzf-lua").lsp_implementations()
-	end, opts)
+local fixjson = require("efmls-configs.formatters.fixjson")
 
-	if client:supports_method("textDocument/codeAction", bufnr) then
-		vim.keymap.set("n", "<leader>oi", function()
-			vim.lsp.buf.code_action({
-				context = { only = { "source.organizeImports" }, diagnostics = {} },
-				apply = true,
-				bufnr = bufnr,
-			})
-			vim.defer_fn(function()
-				vim.lsp.buf.format({ bufnr = bufnr })
-			end, 50)
-		end, opts)
-	end
-end
+local shellcheck = require("efmls-configs.linters.shellcheck")
+local shfmt = require("efmls-configs.formatters.shfmt")
 
-vim.api.nvim_create_autocmd("LspAttach", { group = augroup, callback = lsp_on_attach })
+local cpplint = require("efmls-configs.linters.cpplint")
+local clangfmt = require("efmls-configs.formatters.clang_format")
 
-vim.keymap.set("n", "<leader>q", function()
-	vim.diagnostic.setloclist({ open = true })
-end, { desc = "Open diagnostic list" })
-vim.keymap.set("n", "<leader>dl", vim.diagnostic.open_float, { desc = "Show line diagnostics" })
+local go_revive = require("efmls-configs.linters.go_revive")
+local gofumpt = require("efmls-configs.formatters.gofumpt")
 
-vim.lsp.enable({ "clangd", "lua_ls", "typescript-lanugage-server", "rust_analyzer" })
+local statix = require("efmls-configs.linters.statix")
+local nixfmt = require("efmls-configs.formatters.nixfmt")
+
+vim.lsp.config("efm", {
+	filetypes = {
+		"c",
+		"cpp",
+		"css",
+		"go",
+		"html",
+		"javascript",
+		"javascriptreact",
+		"json",
+		"jsonc",
+		"lua",
+		"markdown",
+        "nix",
+		"python",
+		"sh",
+		"typescript",
+		"typescriptreact",
+		"vue",
+		"svelte",
+	},
+	init_options = { documentFormatting = true },
+	settings = {
+		languages = {
+			c = { clangfmt, cpplint },
+			go = { gofumpt, go_revive },
+			cpp = { clangfmt, cpplint },
+			css = { prettier_d },
+			html = { prettier_d },
+			javascript = { eslint_d, prettier_d },
+			javascriptreact = { eslint_d, prettier_d },
+			json = { eslint_d, fixjson },
+			jsonc = { eslint_d, fixjson },
+			lua = { luacheck, stylua },
+			markdown = { prettier_d },
+			nix = { nixfmt, statix },
+			python = { ruff_lint, ruff_format },
+			sh = { shellcheck, shfmt },
+			typescript = { eslint_d, prettier_d },
+			typescriptreact = { eslint_d, prettier_d },
+			vue = { eslint_d, prettier_d },
+			svelte = { eslint_d, prettier_d },
+		},
+	},
+})
+
+vim.lsp.enable({ "clangd", "lua_ls", "typescript-lanugage-server", "rust_analyzer", "nil_ls", "efm" })
