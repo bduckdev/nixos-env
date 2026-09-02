@@ -3,7 +3,7 @@
 [mgr]
 
 # tmTheme files can be found here: https://github.com/scottmckendry/cyberdream.nvim/tree/main/extras/textmate 
-syntect_theme = "~/mac_env/dotfiles/yazi/.config/bat/themes/cyberdream.tmTheme"
+syntect_theme = "~/.config/yazi/bat/themes/cyberdream.tmTheme"
 
 border_style = { fg = "#3c4048" }
 cwd = { fg = "#5ef1ff" }

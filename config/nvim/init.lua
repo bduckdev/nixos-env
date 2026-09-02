@@ -11,6 +11,8 @@ vim.pack.add({
 	{ src = "https://github.com/tpope/vim-fugitive" },
 	{ src = "https://github.com/lewis6991/gitsigns.nvim" },
 	{ src = "https://github.com/creativenull/efmls-configs-nvim" },
+	{ src = "https://github.com/nvim-lua/plenary.nvim" },
+	{ src = "https://github.com/theprimeagen/harpoon", version = "harpoon2" },
 })
 local function packadd(name)
 	vim.cmd("packadd " .. name)
@@ -28,6 +30,8 @@ packadd("friendly-snippets")
 packadd("vim-fugitive")
 packadd("gitsigns.nvim")
 packadd("efmls-configs-nvim")
+packadd("plenary.nvim")
+packadd("harpoon")
 
 require("bduck")
 require("colors")

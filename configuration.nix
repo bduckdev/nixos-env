@@ -72,14 +72,15 @@
     zsh.enable = true;
   };
 
-  environment.systemPackages = [
-    inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default
-  ];
+  environment = {
+    localBinInPath = true;
 
-  # Nixpkgs installs Mango's fallback config in the package output, but does
-  # not link it into /etc. Expose it at the path Mango documents and checks.
-  environment.etc."mango/config.conf".source =
-    "${config.programs.mango.package}/etc/mango/config.conf";
+    systemPackages = [
+      inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default
+    ];
+
+    etc."mango/config.conf".source = "${config.programs.mango.package}/etc/mango/config.conf";
+  };
 
   nixpkgs.config.allowUnfree = true;
   nix.settings.experimental-features = [
