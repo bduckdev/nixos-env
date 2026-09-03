@@ -13,8 +13,23 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  networking.hostName = "nixos";
-  networking.networkmanager.enable = true;
+  networking = {
+    hostName = "nixos-desktop";
+    networkmanager.enable = true;
+    interfaces.enp7s0.ipv4.addresses = [
+      {
+        address = "192.168.1.69";
+        prefixLength = 24;
+      }
+    ];
+
+    defaultGateway = "192.168.1.1";
+
+    nameservers = [
+      "192.168.1.1"
+      "1.1.1.1"
+    ];
+  };
 
   time.timeZone = "America/New_York";
 
@@ -37,6 +52,17 @@
       xkb = {
         layout = "us";
         variant = "";
+      };
+    };
+
+    openssh = {
+      enable = true;
+      openFirewall = true;
+
+      settings = {
+        PasswordAuthentication = false;
+        KbdInteractiveAuthentication = false;
+        PermitRootLogin = "no";
       };
     };
 
@@ -63,6 +89,9 @@
       "wheel"
     ];
     shell = pkgs.zsh;
+    openssh.authorizedKeys.keys = [
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFt8/My570WXRzBbQi5LNMX7g0Srsw9y+Vjcc1Yj0P0r bduck@continuumcloud.com"
+    ];
   };
 
   programs = {
