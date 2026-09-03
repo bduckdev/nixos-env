@@ -41,13 +41,28 @@ in
   programs = {
     git = {
       enable = true;
+
       settings = {
         user = {
           name = "Brennan Duck";
           email = "brennantduck@gmail.com";
         };
+
         init.defaultBranch = "main";
+        merge.conflictStyle = "zdiff3";
+        pull.rebase = true;
       };
+
+      includes = [
+        {
+          condition = "gitdir:~/Work/";
+          contents = {
+            user = {
+              email = "brennantduck@continuumcloud.com";
+            };
+          };
+        }
+      ];
     };
 
     starship = {
