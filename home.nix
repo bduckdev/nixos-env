@@ -188,11 +188,13 @@ in
     clang-tools
     cmake
     delta
+    delve
     discord
     efm-langserver
     emmet-ls
     firefox
     fzf
+    gdb
     ghostty
     go
     gofumpt
