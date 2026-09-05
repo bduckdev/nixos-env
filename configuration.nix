@@ -77,6 +77,10 @@
       alsa.support32Bit = true;
       pulse.enable = true;
     };
+
+    tailscale = {
+      enable = true;
+    };
   };
 
   security.rtkit.enable = true;
@@ -91,6 +95,7 @@
     shell = pkgs.zsh;
     openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFt8/My570WXRzBbQi5LNMX7g0Srsw9y+Vjcc1Yj0P0r bduck@continuumcloud.com"
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFXlT1LZafXku9iQAeXMacUwl3A8l1cMBLUIWZ5xtanX"
     ];
   };
 
@@ -106,6 +111,7 @@
 
     systemPackages = [
       inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default
+      pkgs.gnomeExtensions.focus-changer
     ];
 
     etc."mango/config.conf".source = "${config.programs.mango.package}/etc/mango/config.conf";
