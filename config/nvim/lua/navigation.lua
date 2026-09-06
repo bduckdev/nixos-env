@@ -1,9 +1,9 @@
 -- fzf-lua
 require("fzf-lua").setup({})
-vim.keymap.set("n", "<leader>pf", function()
+vim.keymap.set("n", "<leader>ff", function()
 	require("fzf-lua").files()
 end, { desc = "find files" })
-vim.keymap.set("n", "<leader>ps", function()
+vim.keymap.set("n", "<leader>fs", function()
 	require("fzf-lua").live_grep()
 end, { desc = "live grep" })
 
