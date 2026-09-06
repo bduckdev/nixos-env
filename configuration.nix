@@ -104,6 +104,7 @@
     noctalia.enable = true;
     steam.enable = true;
     zsh.enable = true;
+    xwayland.enable = true;
   };
 
   environment = {

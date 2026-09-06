@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+
+dir=${1:- }
+
+declare -A dirs=(
+    [left]="left"
+    [right]="right"
+    [up]="up"
+    [down]="down"
+    )
+
+if [[ ! ${dirs[$dir]+exists} ]]; then
+    echo 'error: valid options are "left"|"right"|"up"|"down"' >&2 
+    exit 1
+fi
+
+# Get the currently focused client.
+client="$(mmsg get focusing-client 2>/dev/null)" || exit 0
+
+id="$(jq -r '.id // empty' <<< "$client")"
+[[ -n "$id" ]] || exit 0
+
+# A simple signature telling us where the window currently is.
+get_geometry() {
+    mmsg get client "$id" 2>/dev/null |
+        jq -r '[.monitor, .x, .y, .width, .height] | @tsv'
+}
+
+before="$(get_geometry)" || exit 0
+
+# First try Mango's normal spatial exchange.
+mmsg dispatch "exchange_client,$dir" "client,$id" >/dev/null 2>&1 || true
+
+after="$(get_geometry)" || exit 0
+
+# exchange_client does nothing when it has no target.
+# If our window didn't move/change position, send it to the adjacent monitor.
+if [[ "$before" == "$after" ]]; then
+    mmsg dispatch "tagmon,$dir,0" "client,$id" >/dev/null 2>&1
+fi

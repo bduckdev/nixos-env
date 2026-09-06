@@ -33,6 +33,34 @@ in
     };
   };
 
+  gtk = {
+    enable = true;
+    colorScheme = "dark";
+
+    theme = {
+      name = "Adwaita-dark";
+      package = pkgs.gnome-themes-extra;
+    };
+
+    iconTheme = {
+      name = "Adwaita";
+      package = pkgs.adwaita-icon-theme;
+    };
+
+    cursorTheme = {
+      name = "Adwaita";
+      package = pkgs.adwaita-icon-theme;
+    };
+  };
+
+  dconf = {
+    enable = true;
+
+    settings."org/gnome/desktop/interface" = {
+      color-scheme = "prefer-dark";
+    };
+  };
+
   xdg.configFile = builtins.mapAttrs (name: subpath: {
     source = create_symlink "${dotfiles}/${subpath}";
     recursive = true;
@@ -75,6 +103,7 @@ in
       prefix = "C-a";
       mouse = true;
       terminal = "tmux-256color";
+
       baseIndex = 3;
 
       plugins = with pkgs; [
@@ -117,6 +146,9 @@ in
             set -ogq @thm_surface_0 "#1e2124"
             set -ogq @thm_mantle "#1e2124"
             set -ogq @thm_crust "#1e2124"
+
+                set -as terminal-features 'xterm-kitty:sync@'
+
 
           '';
         }
@@ -198,10 +230,13 @@ in
   };
 
   home.packages = with pkgs; [
+    adw-gtk3
     bat
+    bun
     clang
     clang-tools
     cmake
+    codex
     delta
     delve
     discord
@@ -214,38 +249,45 @@ in
     go
     gofumpt
     gopls
+    herdr
     jetbrains.goland
+    jq
     kitty
     lazygit
     lsd
     lua5_1
     lua-language-server
     luarocks
+    mgba
     neovim
     nil
     nixfmt
     ninja
     nodejs
+    pavucontrol
     prettierd
     python3
     obsidian
     readest
+    retroarch
     ripgrep
     rustup
     slurp
+    spacetimedb
     spotify
     statix
     stremio-linux-shell
     stylua
     tailwindcss
     television
+    telegram-desktop
     templ
     tmuxifier
     tree-sitter
     typescript-language-server
     unzip
     wl-clipboard
-    xwayland-satellite
+    wlr-randr
     yazi
     zoxide
     inputs.helium.packages.${system}.default

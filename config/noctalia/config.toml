@@ -7,6 +7,22 @@ custom_palette = "Cyberdream"
 shadow = false
 contact_shadow = false
 
+[bar.default.monitor.main]
+match = "DP-1"
+enabled = true
+
+[bar.default.monitor.secondary]
+match = "HDMI-A-1"
+enabled = false
+
+[bar.secondary.monitor.main]
+match = "DP-1"
+enabled = false
+
+[bar.secondary.monitor.secondary]
+match = "HDMI-A-1"
+enabled = true
+
 [dock]
 shadow = false
 
