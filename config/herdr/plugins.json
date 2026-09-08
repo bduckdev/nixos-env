@@ -1,0 +1,347 @@
+[
+  {
+    "plugin_id": "annotate",
+    "name": "Annotate",
+    "version": "0.3.0",
+    "min_herdr_version": "0.8.0",
+    "description": "Comment on terminal selections and copy annotations as agent context.",
+    "manifest_path": "/Users/bduck/.config/herdr/plugins/github/annotate-9c299759567c/herdr-plugin.toml",
+    "plugin_root": "/Users/bduck/.config/herdr/plugins/github/annotate-9c299759567c",
+    "enabled": true,
+    "platforms": [
+      "linux",
+      "macos",
+      "windows"
+    ],
+    "build": [
+      {
+        "platforms": [
+          "macos",
+          "linux"
+        ],
+        "command": [
+          "bash",
+          "scripts/fetch-plannotator-tui.sh"
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "id": "capture",
+        "title": "Annotate selection",
+        "description": "Open a comment dialog for the current terminal selection.",
+        "contexts": [
+          "pane"
+        ],
+        "command": [
+          "bun",
+          "src/capture.ts"
+        ]
+      },
+      {
+        "id": "copy-context",
+        "title": "Copy annotations as context",
+        "description": "Copy all saved annotations to the clipboard as Markdown.",
+        "contexts": [
+          "global"
+        ],
+        "command": [
+          "bun",
+          "src/export.ts"
+        ]
+      },
+      {
+        "id": "last",
+        "title": "Annotate: agent's last message",
+        "description": "Review the focused agent's most recent message in plannotator-tui and send feedback back.",
+        "contexts": [
+          "pane"
+        ],
+        "platforms": [
+          "macos",
+          "linux"
+        ],
+        "command": [
+          "./bin/plannotator-tui.exe",
+          "herdr",
+          "last"
+        ]
+      },
+      {
+        "id": "manage",
+        "title": "Manage annotations",
+        "description": "Browse, copy, archive, restore, and delete annotations.",
+        "contexts": [
+          "global"
+        ],
+        "command": [
+          "bun",
+          "src/open-manager.ts"
+        ]
+      },
+      {
+        "id": "open",
+        "title": "Annotate: open here",
+        "description": "Review the focused pane's folder in plannotator-tui and send feedback to its agent.",
+        "contexts": [
+          "workspace",
+          "pane"
+        ],
+        "platforms": [
+          "macos",
+          "linux"
+        ],
+        "command": [
+          "./bin/plannotator-tui.exe",
+          "herdr",
+          "open"
+        ]
+      },
+      {
+        "id": "open-link",
+        "title": "Annotate this file",
+        "description": "Open a Ctrl-clicked Markdown file in plannotator-tui.",
+        "contexts": [
+          "pane"
+        ],
+        "platforms": [
+          "macos",
+          "linux"
+        ],
+        "command": [
+          "./bin/plannotator-tui.exe",
+          "herdr",
+          "open"
+        ]
+      }
+    ],
+    "panes": [
+      {
+        "id": "doc",
+        "title": "Annotate",
+        "platforms": [
+          "macos",
+          "linux"
+        ],
+        "placement": "overlay",
+        "command": [
+          "sh",
+          "-c",
+          "exec bash \"$HERDR_PLUGIN_ROOT/scripts/plannotator-tui.sh\" herdr pane"
+        ]
+      },
+      {
+        "id": "editor",
+        "title": "Annotate",
+        "placement": "popup",
+        "width": 88,
+        "height": 24,
+        "command": [
+          "bun",
+          "src/editor.ts"
+        ]
+      },
+      {
+        "id": "manager",
+        "title": "Annotations",
+        "placement": "popup",
+        "width": 100,
+        "height": 30,
+        "command": [
+          "bun",
+          "src/manager.ts"
+        ]
+      }
+    ],
+    "link_handlers": [
+      {
+        "id": "markdown-file",
+        "title": "Annotate this file",
+        "pattern": "^file://.*\\.(md|markdown|mdx)$",
+        "action": "open-link",
+        "platforms": [
+          "macos",
+          "linux"
+        ]
+      }
+    ],
+    "source": {
+      "kind": "github",
+      "owner": "plannotator",
+      "repo": "herdr-annotate",
+      "resolved_commit": "bccf884b874f5f39ccbef1bb6ac67625c5fb5d54",
+      "managed_path": "/Users/bduck/.config/herdr/plugins/github/annotate-9c299759567c",
+      "installed_unix_ms": 1788442928938
+    }
+  },
+  {
+    "plugin_id": "sessionizer",
+    "name": "Sessionizer",
+    "version": "0.8.0",
+    "min_herdr_version": "0.7.4",
+    "description": "Inspired by ThePrimeagen's tmux-sessionizer: fuzzy pickers to open projects and Git worktrees into Herdr workspaces.",
+    "manifest_path": "/Users/bduck/.config/herdr/plugins/github/sessionizer-66e03d1ff740/herdr-plugin.toml",
+    "plugin_root": "/Users/bduck/.config/herdr/plugins/github/sessionizer-66e03d1ff740",
+    "enabled": true,
+    "platforms": [
+      "macos",
+      "linux"
+    ],
+    "build": [
+      {
+        "command": [
+          "bun",
+          "install",
+          "--frozen-lockfile"
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "id": "open",
+        "title": "Open sessionizer",
+        "command": [
+          "bun",
+          "run",
+          "src/sessionizer/open-pane.ts"
+        ]
+      },
+      {
+        "id": "worktree-open",
+        "title": "Open worktree",
+        "command": [
+          "bun",
+          "run",
+          "src/worktree/open-worktree-pane.ts"
+        ]
+      }
+    ],
+    "panes": [
+      {
+        "id": "sessionizer",
+        "title": "Sessionizer",
+        "placement": "overlay",
+        "command": [
+          "bun",
+          "run",
+          "src/sessionizer/sessionizer-pane.ts"
+        ]
+      },
+      {
+        "id": "worktree",
+        "title": "Worktree",
+        "placement": "overlay",
+        "command": [
+          "bun",
+          "run",
+          "src/worktree/worktree-pane.ts"
+        ]
+      }
+    ],
+    "source": {
+      "kind": "github",
+      "owner": "andrewchng",
+      "repo": "herdr-sessionizer",
+      "resolved_commit": "e3cdab0d8886c9dc2c50a6e09da334d6508fae7b",
+      "managed_path": "/Users/bduck/.config/herdr/plugins/github/sessionizer-66e03d1ff740",
+      "installed_unix_ms": 1787332491927
+    }
+  },
+  {
+    "plugin_id": "structupath.browser",
+    "name": "Browser",
+    "version": "0.7.0",
+    "min_herdr_version": "0.7.0",
+    "description": "Driveable browser pane: live screenshots, console output, localhost links; drives agent-browser sessions, attaches to any CDP browser, or launches its own Chromium",
+    "manifest_path": "/Users/bduck/.config/herdr/plugins/github/structupath.browser-2e6a6aa48295/herdr-plugin.toml",
+    "plugin_root": "/Users/bduck/.config/herdr/plugins/github/structupath.browser-2e6a6aa48295",
+    "enabled": true,
+    "platforms": [
+      "macos",
+      "linux"
+    ],
+    "actions": [
+      {
+        "id": "browse",
+        "title": "Browse (interactive)",
+        "description": "Open an interactive carbonyl browser pane — prompts for a URL",
+        "command": [
+          "bash",
+          "scripts/browse.sh"
+        ]
+      },
+      {
+        "id": "close",
+        "title": "Close browser session and pane",
+        "command": [
+          "bash",
+          "scripts/close.sh"
+        ]
+      },
+      {
+        "id": "open",
+        "title": "Open browser pane",
+        "description": "Navigate the workspace browser session (or attach view-only with no URL)",
+        "command": [
+          "bash",
+          "scripts/open.sh"
+        ]
+      },
+      {
+        "id": "record-start",
+        "title": "Start session recording",
+        "description": "Record the workspace browser session to WebM (starts a fresh context: page reloads, cookies kept)",
+        "command": [
+          "bash",
+          "scripts/record.sh",
+          "start"
+        ]
+      },
+      {
+        "id": "record-stop",
+        "title": "Stop session recording",
+        "command": [
+          "bash",
+          "scripts/record.sh",
+          "stop"
+        ]
+      }
+    ],
+    "panes": [
+      {
+        "id": "browse",
+        "title": "Browse",
+        "placement": "zoomed",
+        "command": [
+          "bash",
+          "scripts/browse-pane.sh"
+        ]
+      },
+      {
+        "id": "view",
+        "title": "Browser",
+        "placement": "split",
+        "command": [
+          "bash",
+          "scripts/pane.sh"
+        ]
+      }
+    ],
+    "link_handlers": [
+      {
+        "id": "localhost",
+        "title": "Open localhost URL in browser pane",
+        "pattern": "^https?://(localhost|127\\.0\\.0\\.1|\\[::1\\])(:[0-9]+)?([/?#].*)?$",
+        "action": "open"
+      }
+    ],
+    "source": {
+      "kind": "github",
+      "owner": "StructuPath",
+      "repo": "herdr-browser",
+      "resolved_commit": "6be66c14b74446e773fe967aa99ded754df857a7",
+      "managed_path": "/Users/bduck/.config/herdr/plugins/github/structupath.browser-2e6a6aa48295",
+      "installed_unix_ms": 1787673716528
+    }
+  }
+]

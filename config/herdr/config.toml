@@ -1,0 +1,91 @@
+onboarding = false
+# herdr configuration — tmux-flavored keybindings
+# Mirrors ~/.tmux.conf: ctrl+a prefix, vim pane movement, tmux defaults elsewhere.
+# Stowed from dotfiles/herdr; apply changes with: herdr server reload-config
+
+[keys]
+# Prefix (tmux: set-option -g prefix C-a)
+prefix = "ctrl+a"
+
+# Reload config (tmux: bind r source-file ~/.tmux.conf)
+#reload_config = "prefix+r"
+#resize_mode = "prefix+shift+r" # swapped with reload_config's default slot
+#
+## --- tmux default bindings ---
+help = "prefix+?"              # tmux: ?  list keys
+new_tab = "prefix+c"           # tmux: c  new window
+#rename_tab = "prefix+comma"    # tmux: ,  rename window
+#close_tab = "prefix+ampersand" # tmux: &  kill window
+previous_tab = "prefix+p"      # tmux: p  previous window
+next_tab = "prefix+n"          # tmux: n  next window
+switch_tab = "prefix+1..9"     # tmux: 1-9  select window
+split_vertical = 'prefix+%'    # tmux: %  split side-by-side
+split_horizontal = 'prefix+"'  # tmux: "  split stacked
+close_pane = "prefix+x"        # tmux: x  kill pane
+zoom = "prefix+z"              # tmux: z  zoom pane
+detach = "prefix+d"            # tmux: d  detach
+#cycle_pane_next = "prefix+o"   # tmux: o  next pane
+#copy_mode = "prefix+["         # tmux: [  copy mode
+#open_notification_target = "prefix+shift+o" # moved off prefix+o for cycle_pane_next
+#
+# --- pane movement (tmux: bind h/j/k/l select-pane) ---
+focus_pane_left = "prefix+h"
+focus_pane_down = "prefix+j"
+focus_pane_up = "prefix+k"
+focus_pane_right = "prefix+l"
+
+navigate_workspace_up = "k"
+navigate_workspace_down = "j"
+
+# --- swap panes (tmux: bind -r C-h/C-j/C-k/C-l swap-pane) ---
+swap_pane_left = "prefix+ctrl+h"
+swap_pane_down = "prefix+ctrl+j"
+swap_pane_up = "prefix+ctrl+k"
+swap_pane_right = "prefix+ctrl+l"
+
+# --- resize panes (tmux: bind -r H/J/K/L resize-pane) ---
+resize_pane_left = "prefix+shift+h"
+resize_pane_down = "prefix+shift+j"
+resize_pane_up = "prefix+shift+k"
+resize_pane_right = "prefix+shift+l"
+
+[[keys.command]]
+key = "prefix+b"
+type = "plugin_action"
+command = "structupath.browser.open"
+description = "browser pane"
+
+[theme]
+# "terminal" base passes the host ANSI palette through (wezterm = cyberdream),
+# with the UI tokens below overridden to cyberdream explicitly.
+name = "terminal"
+auto_switch = false
+
+# cyberdream (https://github.com/scottmckendry/cyberdream.nvim)
+# Matched to dotfiles/wezterm/.config/wezterm/lua/cyberdream.lua
+[theme.custom]
+panel_bg = "reset"       # transparent: inherit the terminal background
+sidebar_bg = "reset"     # transparent: inherit the terminal background
+active_row_bg = "#1e2124" # bg_alt
+selection_bg = "#3c4048" # bg_highlight, matches wezterm selection_bg
+surface_dim = "reset"    # transparent: inherit the terminal background
+surface0 = "#1e2124"
+surface1 = "#3c4048"
+overlay0 = "#5b626f"     # midpoint bg_highlight -> grey
+overlay1 = "#7b8496"     # grey
+text = "#ffffff"
+subtext0 = "#7b8496"
+accent = "#5ea1ff"       # blue, same accent as the pi cyberdream theme
+blue = "#5ea1ff"
+teal = "#5ef1ff"         # cyan
+green = "#5eff6c"
+yellow = "#f1ff5e"
+red = "#ff6e5e"
+peach = "#ffbd5e"        # orange
+mauve = "#bd5eff"        # purple
+
+[ui.toast]
+delivery = "herdr"
+
+[ui]
+show_agent_labels_on_pane_borders = true
