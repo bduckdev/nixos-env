@@ -254,11 +254,13 @@ in
     jq
     kitty
     lazygit
+    linux-wallpaperengine
     lsd
     lua5_1
     lua-language-server
     luarocks
     mgba
+    mpvpaper
     neovim
     nil
     nixfmt
@@ -286,7 +288,6 @@ in
     tree-sitter
     typescript-language-server
     unzip
-    wl-clipboard
     wlr-randr
     yazi
     zoxide

@@ -8,10 +8,19 @@
 {
   imports = [
     ./hardware-configuration.nix
+    inputs.mango.nixosModules.mango
   ];
 
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
+
+  systemd.user.targets.mango-session = {
+    description = "Mango compositor session";
+    documentation = [ "man:systemd.special(7)" ];
+    bindsTo = [ "graphical-session.target" ];
+    wants = [ "graphical-session-pre.target" ];
+    after = [ "graphical-session-pre.target" ];
+  };
 
   networking = {
     hostName = "nixos-desktop";
@@ -105,7 +114,6 @@
     noctalia.enable = true;
     steam.enable = true;
     zsh.enable = true;
-    xwayland.enable = true;
   };
 
   environment = {
@@ -114,9 +122,10 @@
     systemPackages = [
       inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default
       pkgs.gnomeExtensions.focus-changer
+      pkgs.wl-clipboard
+      pkgs.wl-clip-persist
     ];
 
-    etc."mango/config.conf".source = "${config.programs.mango.package}/etc/mango/config.conf";
   };
 
   nixpkgs.config.allowUnfree = true;
