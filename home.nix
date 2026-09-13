@@ -20,6 +20,7 @@ let
     nvim = "nvim";
     yazit = "yazi";
   };
+  spicePkgs = inputs.spicetify-nix.legacyPackages.${pkgs.system};
 in
 {
   home = {
@@ -91,6 +92,16 @@ in
           };
         }
       ];
+    };
+
+    spicetify = {
+      enable = true;
+      enabledExtensions = with spicePkgs.extensions; [
+        adblockify
+        hidePodcasts
+        shuffle
+      ];
+      theme = spicePkgs.themes.comfy;
     };
 
     starship = {
@@ -276,7 +287,6 @@ in
     rustup
     slurp
     spacetimedb
-    spotify
     statix
     stremio-linux-shell
     stylua

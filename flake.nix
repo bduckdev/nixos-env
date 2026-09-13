@@ -23,6 +23,11 @@
       url = "github:mangowm/mango";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    spicetify-nix = {
+      url = "github:Gerg-L/spicetify-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -41,6 +46,10 @@
               backupFileExtension = "backup";
               extraSpecialArgs = { inherit inputs; };
               users.bduck = import ./home.nix;
+
+              sharedModules = [
+                inputs.spicetify-nix.homeManagerModules.spicetify
+              ];
             };
           }
         ];
