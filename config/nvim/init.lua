@@ -13,6 +13,7 @@ vim.pack.add({
 	{ src = "https://github.com/creativenull/efmls-configs-nvim" },
 	{ src = "https://github.com/nvim-lua/plenary.nvim" },
 	{ src = "https://github.com/theprimeagen/harpoon", version = "harpoon2" },
+	{ src = "https://github.com/stevearc/oil.nvim" },
 })
 local function packadd(name)
 	vim.cmd("packadd " .. name)
