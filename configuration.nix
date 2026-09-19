@@ -184,16 +184,12 @@
     pkgs.nerd-fonts.jetbrains-mono
   ];
 
-  systemd.sleep.extraConfig = ''
+  systemd.sleep.settings.Sleep = {
+    AllowHibernation = "no";
+    AllowSuspend = "no";
+    AllowHybridSleep = "no";
+    AllowSuspendThenHibernate = "no";
+  };
 
-    AllowSuspend=no
-
-    AllowHibernation=no
-
-    AllowHybridSleep=no
-
-    AllowSuspendThenHibernate=no
-
-  '';
   system.stateVersion = "26.05"; # Keep the version from the first install.
 }
