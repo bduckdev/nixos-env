@@ -96,6 +96,7 @@
     openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFt8/My570WXRzBbQi5LNMX7g0Srsw9y+Vjcc1Yj0P0r bduck@continuumcloud.com"
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFXlT1LZafXku9iQAeXMacUwl3A8l1cMBLUIWZ5xtanX"
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINZ4rzsuIDoo/u5X89OShjMZ1fSH5o12gMrBwYyKAG+X brennantduck@gmail.com"
     ];
   };
 
@@ -128,5 +129,18 @@
     pkgs.nerd-fonts.jetbrains-mono
   ];
 
+
+
+systemd.sleep.extraConfig = ''
+
+  AllowSuspend=no
+
+  AllowHibernation=no
+
+  AllowHybridSleep=no
+
+  AllowSuspendThenHibernate=no
+
+'';
   system.stateVersion = "26.05"; # Keep the version from the first install.
 }
