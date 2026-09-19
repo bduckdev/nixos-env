@@ -98,10 +98,10 @@ in
       enable = true;
       enabledExtensions = with spicePkgs.extensions; [
         adblockify
-        hidePodcasts
-        shuffle
+        #hidePodcasts
+        #shuffle
       ];
-      theme = spicePkgs.themes.comfy;
+      theme = spicePkgs.themes.text;
     };
 
     starship = {
@@ -125,6 +125,8 @@ in
             set -g @catppuccin_window_status_style "basic"
             set -g @catppuccin_window_text " #W"
             set -g @catppuccin_window_current_text " #W"
+            set -g @catppuccin_status_left_separator "█"
+
 
             # --> Catppuccin (Cyberdream)
             set -ogq @thm_bg "#16181a"
@@ -235,16 +237,28 @@ in
         bindkey -s ^g "lazygit\n"
         bindkey -s ^a "tmux a\n"
         bindkey -s ^f "tmuxifier-sessionizer\n"
+
+        mman() {
+            man "$@" | col -bx | bat -l man --style=plain
+        }
       '';
 
+    };
+  };
+
+  services = {
+    easyeffects = {
+      enable = true;
     };
   };
 
   home.packages = with pkgs; [
     adw-gtk3
     bat
+    bottles
     bun
     clang
+    clang-manpages
     clang-tools
     cmake
     codex
@@ -253,15 +267,19 @@ in
     discord
     efm-langserver
     emmet-ls
+    fd
     firefox
     fzf
     gdb
     ghostty
+    gnumake
     go
     gofumpt
     gopls
     herdr
+    heroic
     jetbrains.goland
+    jetbrains.idea
     jq
     kitty
     lazygit
@@ -270,15 +288,22 @@ in
     lua5_1
     lua-language-server
     luarocks
+    man-pages
     mgba
     mpvpaper
+    lutris
     neovim
+    nh
     nil
+    nix-output-monitor
     nixfmt
     ninja
     nodejs
+    nvd
+    obs-studio
     pavucontrol
     prettierd
+    protonup-qt
     python3
     obsidian
     readest
@@ -294,6 +319,7 @@ in
     television
     telegram-desktop
     templ
+    tldr
     tmuxifier
     tree-sitter
     typescript-language-server
