@@ -224,6 +224,7 @@ in
     zsh = {
       enable = true;
       autosuggestion.enable = true;
+
       oh-my-zsh = {
         enable = true;
         plugins = [
@@ -231,8 +232,13 @@ in
         ];
         theme = "robbyrussell";
       };
-      shellAliases.ls = "lsd";
-      shellAliases.ll = "lsd -alF";
+
+      shellAliases = {
+        ls = "lsd";
+        ll = "lsd -alF";
+        vi = "nvim";
+      };
+
       initContent = ''
         bindkey -s ^g "lazygit\n"
         bindkey -s ^a "tmux a\n"
