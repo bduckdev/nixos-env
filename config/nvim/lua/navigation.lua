@@ -1,5 +1,23 @@
 -- fzf-lua
-require("fzf-lua").setup({})
+local fzf = require("fzf-lua")
+fzf.setup({})
+
+local function find_directory()
+	fzf.fzf_exec("fd --type d --hidden --exclude .git", {
+		prompt = "Directories> ",
+		actions = {
+			["default"] = function(selected)
+				local directory = selected[1]
+
+				vim.cmd("Oil " .. vim.fn.fnameescape(directory))
+			end,
+		},
+	})
+end
+
+vim.keymap.set("n", "<leader>fd", find_directory, {
+	desc = "Find directory in Oil",
+})
 vim.keymap.set("n", "<leader>ff", function()
 	require("fzf-lua").files()
 end, { desc = "find files" })
