@@ -15,4 +15,3 @@ systemctl --user start mango-session.target
 
 
 noctalia & 
-tmux new-session -d -s "main" &
