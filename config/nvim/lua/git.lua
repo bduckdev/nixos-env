@@ -1,3 +1,4 @@
+-- git.lua
 require("gitsigns").setup({
 	signs = {
 		add = { text = "│" },

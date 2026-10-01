@@ -18,10 +18,6 @@ local float_borders = {
 --local custom_bg = "#282c34"
 --local custom_border = "#51AFEF"
 
--- rose pine
---local custom_bg = "#1f1d2e"
---local custom_border = "#9ccfd8"
-
 -- cyberdream
 local custom_bg = "#16181a"
 local custom_border = "#f1ff5e"

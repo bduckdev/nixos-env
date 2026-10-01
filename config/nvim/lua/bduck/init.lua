@@ -1,2 +1,3 @@
 require("bduck.set")
-require("bduck.remap")
+require("bduck.keymap")
+require("bduck.autocommands")

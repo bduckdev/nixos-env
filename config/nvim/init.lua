@@ -14,6 +14,15 @@ vim.pack.add({
 	{ src = "https://github.com/nvim-lua/plenary.nvim" },
 	{ src = "https://github.com/theprimeagen/harpoon", version = "harpoon2" },
 	{ src = "https://github.com/stevearc/oil.nvim" },
+	{ src = "https://github.com/echasnovski/mini.icons" },
+	{ src = "https://github.com/mbbill/undotree" },
+	{ src = "https://github.com/folke/trouble.nvim" },
+	{ src = "https://github.com/folke/snacks.nvim" },
+	{
+		src = "https://github.com/obsidian-nvim/obsidian.nvim",
+		version = vim.version.range("*"),
+	},
+	{ src = "https://github.com/yousefhadder/markdown-plus.nvim" },
 })
 local function packadd(name)
 	vim.cmd("packadd " .. name)
@@ -33,6 +42,10 @@ packadd("gitsigns.nvim")
 packadd("efmls-configs-nvim")
 packadd("plenary.nvim")
 packadd("harpoon")
+packadd("oil.nvim")
+packadd("mini.icons")
+packadd("trouble.nvim")
+packadd("snacks.nvim")
 
 require("bduck")
 require("colors")
@@ -40,4 +53,5 @@ require("treesitter")
 require("navigation")
 require("statusline")
 require("lsp")
-require("completion")
+require("notes")
+require("ui")

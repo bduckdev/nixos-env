@@ -1,3 +1,6 @@
+-- ================
+-- LSP CONFIG
+-- ================
 local diagnostic_signs = {
 	Error = "\u{f057} ",
 	Warn = "\u{f071} ",
@@ -82,7 +85,7 @@ vim.api.nvim_create_autocmd("BufWritePre", {
 		"*.cpp",
 		"*.h",
 		"*.hpp",
-        "*.nix",
+		"*.nix",
 	},
 	callback = function(args)
 		-- avoid formatting non-file buffers (helps prevent weird write prompts)
@@ -160,7 +163,7 @@ vim.lsp.config("efm", {
 		"jsonc",
 		"lua",
 		"markdown",
-        "nix",
+		"nix",
 		"python",
 		"sh",
 		"typescript",
@@ -194,3 +197,22 @@ vim.lsp.config("efm", {
 })
 
 vim.lsp.enable({ "clangd", "lua_ls", "typescript-lanugage-server", "rust_analyzer", "nil_ls", "efm" })
+
+-- =====================
+-- DIAGNOSTICS
+-- =====================
+-- trouble.nvim
+local trouble = require("trouble")
+local opts = {}
+
+trouble.setup(opts)
+
+vim.keymap.set("n", "<leader>xx", "<cmd>Trouble diagnostics toggle<cr>", { desc = "Diagnostics" })
+
+-- ====================
+-- COMPLETIONS
+-- ====================
+-- blink.cmp
+local cmp = require("blink.cmp")
+cmp.build():pwait()
+cmp.setup()

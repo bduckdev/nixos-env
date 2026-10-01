@@ -1,3 +1,4 @@
+-- statusline.lua
 local mode_icons = {
 	NORMAL = "󰰓",
 	INSERT = "󰰄",

@@ -33,7 +33,5 @@ vim.opt.isfname:append("@-@")
 vim.opt.updatetime = 50
 
 vim.opt.colorcolumn = "80"
-vim.opt.textwidth = 80
-vim.opt.formatoptions:append("t")
 
 vim.opt.showmode = false

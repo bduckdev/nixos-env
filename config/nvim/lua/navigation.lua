@@ -1,8 +1,12 @@
+-- navigation.lua
+-- ========================================
+-- CONFIGS
+-- ========================================
 -- fzf-lua
 local fzf = require("fzf-lua")
 fzf.setup({})
 
-local function find_directory()
+local function fzflua_find_directory()
 	fzf.fzf_exec("fd --type d --hidden --exclude .git", {
 		prompt = "Directories> ",
 		actions = {
@@ -15,47 +19,109 @@ local function find_directory()
 	})
 end
 
-vim.keymap.set("n", "<leader>fd", find_directory, {
+vim.api.nvim_create_user_command("Finddir", function(opts)
+	fzflua_find_directory()
+end, { nargs = 0, desc = "fzflua - Find directory and open in Oil" })
+vim.keymap.set("n", "<leader>fd", "silent <cmd>Finddir<CR>", {
 	desc = "Find directory in Oil",
 })
+
 vim.keymap.set("n", "<leader>ff", function()
 	require("fzf-lua").files()
-end, { desc = "find files" })
+end, { desc = "fzf-lua - Find files" })
 vim.keymap.set("n", "<leader>fs", function()
 	require("fzf-lua").live_grep()
-end, { desc = "live grep" })
+end, { desc = "fzf-lua - Live grep" })
 
 -- harpoon
 local harpoon = require("harpoon")
-harpoon:setup()
+
+harpoon:setup({
+	settings = {
+		save_on_toggle = true,
+		sync_on_ui_close = true,
+	},
+})
+
+vim.o.tabline = "%!v:lua.HarpoonTabline()"
 
 vim.keymap.set("n", "<leader>a", function()
 	harpoon:list():add()
-end)
+	vim.cmd("redrawtabline")
+end, { desc = "Harpoon - add buffer" })
+
 vim.keymap.set("n", "<C-e>", function()
 	harpoon.ui:toggle_quick_menu(harpoon:list())
-end)
+	vim.cmd("redrawtabline")
+	vim.cmd("redrawtabline")
+end, { desc = "Harpoon - Menu" })
 
-vim.keymap.set("n", "<C-h>", function()
-	harpoon:list():select(1)
-end)
-vim.keymap.set("n", "<C-t>", function()
-	harpoon:list():select(2)
-end)
-vim.keymap.set("n", "<C-n>", function()
-	harpoon:list():select(3)
-end)
-vim.keymap.set("n", "<C-s>", function()
-	harpoon:list():select(4)
-end)
+vim.keymap.set("n", "<leader>hp", function()
+	harpoon:list():prev({ ui_nav_wrap = true })
+	vim.cmd("redrawtabline")
+end, { desc = "Harpoon - Switch to previous mark" })
 
--- Toggle previous & next buffers stored within Harpoon list
-vim.keymap.set("n", "<C-S-P>", function()
-	harpoon:list():prev()
-end)
-vim.keymap.set("n", "<C-S-N>", function()
-	harpoon:list():next()
-end)
+vim.keymap.set("n", "<leader>hn", function()
+	harpoon:list():next({ ui_nav_wrap = true })
+	vim.cmd("redrawtabline")
+end, { desc = "Harpoon - Switch to next mark" })
+
+-- Keys to navigate between marks
+local harpoon_mark_keys = { "<C-h>", "<C-t>", "<C-n>", "<C-s>" }
+
+for i, key in ipairs(harpoon_mark_keys) do
+	vim.keymap.set("n", key, function()
+		harpoon:list():select(i)
+		vim.cmd("redrawtabline")
+	end, { desc = "Harpoon - Switch to tag " .. i })
+end
+
+-- Setup tabline
+local harpoon_tabline_show_hint = false
+
+vim.o.showtabline = 2
+
+_G.HarpoonTabline = function()
+	local list = harpoon:list()
+	local current = vim.fn.expand("%:p")
+	local parts = {}
+	local icons = require("mini.icons")
+
+	for i, item in ipairs(list.items) do
+		if item.value and item.value ~= "" then
+			local fullpath = vim.fn.fnamemodify(item.value, ":p")
+			local name = vim.fn.fnamemodify(item.value, ":t")
+
+			local icon = icons.get("file", fullpath)
+
+			-- Escape % because tabline treats it specially
+			name = name:gsub("%%", "%%%%")
+
+			-- Highlights from lualine
+			local hl = fullpath == current and "%#lualine_a_normal#" or "%#lualine_c_normal#"
+
+			if i <= #harpoon_mark_keys and harpoon_tabline_show_hint then
+				local key_label = harpoon_mark_keys[i]:match("([%w])[^%w]*$")
+				table.insert(parts, string.format("%s %s: %s %s ", hl, harpoon_mark_keys[i], icon, name))
+			else
+				table.insert(parts, string.format("%s %s %s ", hl, icon, name))
+			end
+		end
+	end
+
+	table.insert(parts, "%#TabLineFill#%=")
+
+	return table.concat(parts)
+end
+
+vim.api.nvim_set_hl(0, "HarpoonWindow", { link = "Normal" })
+vim.api.nvim_set_hl(0, "HarpoonBorder", { link = "Normal" })
+vim.api.nvim_create_autocmd("User", {
+	pattern = "SnacksDashboardOpened",
+	callback = function()
+		vim.o.showtabline, vim.o.laststatus = 2, 2
+	end,
+})
 
 -- oil
 require("oil").setup({
