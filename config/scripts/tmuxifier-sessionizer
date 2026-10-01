@@ -1,21 +1,43 @@
 #!/usr/bin/env bash
 
+working_dirs=("$HOME"/Work "$HOME"/Personal "$HOME"/School "$HOME"/Playground)
+
 if [ -n "$TMUX" ]; then
 	tmux detach -E "bash -ic tmuxifier-sessionizer"
 else
 	if [[ $# -eq 1 ]]; then
 		selected=$1
 	else
-		selected=$(find ~ ~/Work ~/Personal ~/School ~/Playground -mindepth 1 -maxdepth 1 -type d | tv --preview-command 'tree -C {} | head -n 10')
+		selected=$(
+			{
+				echo "$HOME"/nixos-env
+                printf '%s\n' "${working_dirs[@]}"
+				fd --type d --min-depth 1 --max-depth 1 . \
+					~/Work \
+					~/Personal \
+					~/School \
+					~/Playground
+			} | fzf
+		)
 	fi
 
 	[[ -z $selected ]] && exit 0
 
-	selected_name=$(basename "$selected" | tr '. ' '__')
 
-	if ! tmux has-session -t "$selected" 2>/dev/null; then
-		TS_DIR="$selected" TS_NAME="$selected_name" tmuxifier load-session dev
+    selected_is_working_dir_root=false
+    for working_dir  in "${working_dirs[@]}"; do
+        if [[ "$selected" == "$working_dir" ]]; then
+            selected_is_working_dir_root=true
+            break
+        fi
+    done
+
+    if  $selected_is_working_dir_root; then
+        ~/nixos-env/config/scripts/create-project "$selected"
+    elif  ! tmux has-session -t "$selected" 2>/dev/null ; then
+		BDUCK_TMUX_LAYOUT_SESSION_DIR="$selected" tmuxifier load-session dev
 	else
 		tmux switch-client -t "$selected"
 	fi
 fi
+
