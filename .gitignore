@@ -1,1 +1,12 @@
 *.log
+
+# Pi contains credentials and session history; track only curated extensions.
+config/pi/*
+!config/pi/agent/
+config/pi/agent/*
+!config/pi/agent/extensions/
+config/pi/agent/extensions/*
+!config/pi/agent/extensions/penguin-header.ts
+!config/pi/agent/extensions/nv.ts
+
+.luarc.json
