@@ -127,7 +127,7 @@
 
     systemPackages = [
       inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default
-      pkgs.gnomeExtensions.focus-changer
+      # pkgs.gnomeExtensions.focus-changer
       pkgs.mangohud
       pkgs.wl-clipboard
       pkgs.wl-clip-persist
@@ -157,8 +157,14 @@
 
     };
 
-    displayManager.gdm.enable = true;
-    desktopManager.gnome.enable = true;
+    # displayManager.gdm.enable = true;
+    # desktopManager.gnome.enable = true;
+
+    displayManager.sddm = {
+      enable = true;
+      wayland.enable = true;
+    };
+    desktopManager.plasma6.enable = true;
     printing.enable = true;
 
     pulseaudio.enable = false;

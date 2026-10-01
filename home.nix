@@ -13,6 +13,7 @@ let
   configs = {
     bat = "bat";
     delta = "delta";
+    ghostty = "ghostty";
     lazygit = "lazygit";
     kitty = "kitty";
     mango = "mango";
@@ -31,6 +32,7 @@ in
       "Pictures/Wallpapers".source = create_symlink "${assets}/wallpapers";
       ".tmux-layouts".source = create_symlink "${dotfiles}/tmuxifier";
       ".local/bin".source = create_symlink "${dotfiles}/scripts";
+      ".pi".source = create_symlink "${dotfiles}/pi";
     };
   };
 
@@ -68,6 +70,25 @@ in
   }) configs;
 
   programs = {
+    neovim = {
+      enable = true;
+
+      defaultEditor = true;
+
+      viAlias = true;
+      vimAlias = false;
+      vimdiffAlias = true;
+
+      sideloadInitLua = true;
+    };
+
+    nh = {
+      enable = true;
+      clean.enable = true;
+      clean.extraArgs = "--keep-since 4d --keep 3";
+      flake = "/home/bduck/nixos-env/";
+    };
+
     git = {
       enable = true;
 
@@ -80,9 +101,24 @@ in
         init.defaultBranch = "main";
         merge.conflictStyle = "zdiff3";
         pull.rebase = true;
+        core.pager = "delta";
+        interactive.diffFilter = "delta --color-only";
+        diff.tool = "nvimdiff";
+        difftool.prompt = false;
+        merge.tool = "nvimdiff";
+        mergetool.prompt = false;
+
+        delta = {
+          features = "cyberdream";
+          navigate = true;
+          dark = true;
+        };
       };
 
       includes = [
+        {
+          path = "${config.home.homeDirectory}/.config/delta/themes/cyberdream.gitconfig";
+        }
         {
           condition = "gitdir:~/Work/";
           contents = {
@@ -116,6 +152,8 @@ in
       terminal = "tmux-256color";
 
       baseIndex = 3;
+
+      focusEvents = true;
 
       plugins = with pkgs; [
         {
@@ -160,59 +198,67 @@ in
             set -ogq @thm_mantle "#1e2124"
             set -ogq @thm_crust "#1e2124"
 
-                set -as terminal-features 'xterm-kitty:sync@'
-
-
+            set -as terminal-features 'xterm-kitty:sync@'
           '';
         }
       ];
 
       extraConfig = ''
-        set -g allow-passthrough on
-        set -g repeat-time 1000
+         set -g allow-passthrough on
+         set -g repeat-time 150
 
 
-        set -g extended-keys on
-        set -g extended-keys-format csi-u
+         set -g extended-keys on
+         set -g extended-keys-format csi-u
 
-        setw -g mode-keys vi
-        bind -T copy-mode-vi v send-keys -X begin-selection
-        bind -T copy-mode-vi y send-keys -X copy-pipe-and-cancel '${pkgs.xclip}/bin/xclip -in -selection clipboard'
+         # set -g status-position top
+         bind-key -n C-g display-popup -E -d '#{pane_current_path}' -w 80% -h 80% "lazygit"
+         unbind t
+         bind t display-popup -E -w 80% -h 80% "$SHELL -f"
 
-        # Pane navigation
-        bind-key h select-pane -L
-        bind-key j select-pane -D
-        bind-key k select-pane -U
-        bind-key l select-pane -R
 
-        # Swap panes
-        bind-key -r C-h swap-pane -s '{left-of}'
-        bind-key -r C-j swap-pane -s '{down-of}'
-        bind-key -r C-k swap-pane -s '{up-of}'
-        bind-key -r C-l swap-pane -s '{right-of}'
+         set -g set-clipboard on
 
-        # Resize panes
-        bind-key -r H resize-pane -L 20
-        bind-key -r J resize-pane -D 10
-        bind-key -r K resize-pane -U 10
-        bind-key -r L resize-pane -R 20
+         setw -g mode-keys vi
+         bind -T copy-mode-vi v send-keys -X begin-selection
+         #bind -T copy-mode-vi y send-keys -X copy-pipe-and-cancel '${pkgs.xclip}/bin/xclip -in -selection clipboard'
+         bind -T copy-mode-vi y send-keys -X copy-pipe-and-cancel 'wl-copy'
 
-        setw -g automatic-rename off
-        setw -g allow-rename off
+         # Pane navigation
+         bind-key h select-pane -L
+         bind-key j select-pane -D
+         bind-key k select-pane -U
+         bind-key l select-pane -R
 
-        # Catppuccin window formatting
+         # Swap panes
+         bind-key -r C-h swap-pane -s '{left-of}'
+         bind-key -r C-j swap-pane -s '{down-of}'
+         bind-key -r C-k swap-pane -s '{up-of}'
+         bind-key -r C-l swap-pane -s '{right-of}'
 
-        # Status bar
-        set -g status-right-length 100
-        set -g status-left-length 100
-        set -g status-left ""
+         # Resize panes
+         bind-key -r H resize-pane -L 20
+         bind-key -r J resize-pane -D 10
+         bind-key -r K resize-pane -U 10
+         bind-key -r L resize-pane -R 20
 
-        set -g status-right "#{E:@catppuccin_status_application}"
-        # set -agF status-right "#{E:@catppuccin_status_cpu}"
-        # set -agF status-right "#{E:@catppuccin_status_ram}"
-        set -ag status-right "#{E:@catppuccin_status_session}"
-        set -ag status-right "#{E:@catppuccin_status_uptime}"
-        # set -agF status-right "#{E:@catppuccin_status_battery}"
+        # setw -g automatic-rename off
+        # setw -g allow-rename off
+
+         # Catppuccin window formatting
+
+         # Status bar
+         set -g status-justify absolute-centre
+         set -g status-right-length 99
+         set -g status-left-length 99
+         set -g status-left "#{E:@catppuccin_status_session}"
+
+         set -g status-right "#{E:@catppuccin_status_application}"
+         #set -agF status-right "#{E:@catppuccin_status_cpu}"
+         #set -agF status-right "#{E:@catppuccin_status_ram}"
+         set -ag status-right "#{E:@catppuccin_status_uptime}"
+         # set -agF status-right "#{E:@catppuccin_status_battery}"
+
       '';
     };
 
@@ -223,30 +269,63 @@ in
 
     zsh = {
       enable = true;
-      autosuggestion.enable = true;
 
-      oh-my-zsh = {
-        enable = true;
-        plugins = [
-          "git"
-        ];
-        theme = "robbyrussell";
-      };
+      fastSyntaxHighlighting.enable = true;
 
       shellAliases = {
-        ls = "lsd";
+        ls = "lsd -a";
         ll = "lsd -alF";
-        vi = "nvim";
+        ot = "nvim -c 'Obsidian today'";
+        og = "nvim '~/Documents/cool-vault1/5 - Main Notes/GOALS.md'";
+        of = "nvim -c 'Obsidian quick_switch'";
+        ta = "tmux a";
+        tm = "BDUCK_TMUX_LAYOUT_START_WINDOW=3 BDUCK_TMUX_LAYOUT_SESSION_DIR=~/nixos-env tmuxifier load-session dev";
+        hms = "nh search options --scope home-manager";
       };
 
       initContent = ''
+        # History
+        setopt append_history
+        setopt share_history 
+        setopt hist_ignore_dups
+        setopt hist_expire_dups_first
+        setopt hist_find_no_dups
+        setopt no_beep
+        setopt inc_append_history
+
+        HISTSIZE=1000000000
+        SAVEHIST=1000000000
+
+        export DEJA_ACCEPT_KEY=^Y
+        export DEJA_CYCLE_KEY=^N
+        export DEJA_FUZZ_KEY=
+        export DEJA_FUZZ_BACK_KEY=
+        export DEJA_TOGGLE_EMPTY_KEY=
+
+        if [[ -r "$HOME/.local/share/deja/init.zsh" ]]; then
+            source "$HOME/.local/share/deja/init.zsh"
+        else
+            eval "$(deja init zsh)"
+        fi
+
         bindkey -s ^g "lazygit\n"
-        bindkey -s ^a "tmux a\n"
         bindkey -s ^f "tmuxifier-sessionizer\n"
 
         mman() {
             man "$@" | col -bx | bat -l man --style=plain
         }
+
+        eval "$(fzf --zsh)"
+
+        export FZF_DEFAULT_OPTS='
+          --layout=reverse
+          --color=bg:#16181a,fg:#ffffff,hl:#5ef1ff
+          --color=bg+:#3c4048,fg+:#ffffff,hl+:#5ef1ff
+          --color=border:#3c4048,header:#5ea1ff,gutter:#16181a
+          --color=spinner:#f1ff5e,info:#5ef1ff
+          --color=pointer:#bd5eff,marker:#5eff6c,prompt:#5ea1ff
+        '
+        [[ -f ~/.zshrc.local ]] && source ~/.zshrc.local
       '';
 
     };
@@ -268,11 +347,13 @@ in
     clang-tools
     cmake
     codex
+    deja
     delta
     delve
     discord
     efm-langserver
     emmet-ls
+    fastfetch
     fd
     firefox
     fzf
@@ -284,6 +365,7 @@ in
     gopls
     herdr
     heroic
+    imagemagick
     jetbrains.goland
     jetbrains.idea
     jq
@@ -298,8 +380,6 @@ in
     mgba
     mpvpaper
     lutris
-    neovim
-    nh
     nil
     nix-output-monitor
     nixfmt
@@ -308,14 +388,17 @@ in
     nvd
     obs-studio
     pavucontrol
+    pi-coding-agent
     prettierd
     protonup-qt
     python3
     obsidian
     readest
     retroarch
+    revive
     ripgrep
     rustup
+    seer
     slurp
     spacetimedb
     statix
