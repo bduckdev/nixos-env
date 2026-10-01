@@ -1,25 +1,20 @@
-session_root "${TS_DIR}"
+session_root "${BDUCK_TMUX_LAYOUT_SESSION_DIR}"
 
-if initialize_session "${TS_NAME}"; then
-	new_window "editor"
-	run_cmd "nvim ."
-	select_pane 3
+BDUCK_TMUX_LAYOUT_SESSION_NAME=$(basename "$BDUCK_TMUX_LAYOUT_SESSION_DIR" | tr '. ' '__')
 
-	new_window "shell"
+if initialize_session "${BDUCK_TMUX_LAYOUT_SESSION_NAME}"; then
+	new_window 
+	run_cmd "while nvim; do true; done"
 
-	new_window "agent"
-	#run_cmd "opencode"
-	if [ -d ${TS_DIR}/.git ]; then
-		split_h 10
-		run_cmd "lazygit"
-	fi
-	select_pane 3
+	new_window 
 
-	new_window "server"
-	if grep -qE '^dev *:' ${TS_DIR}/Makefile; then
-		run_cmd "make dev"
-	fi
+	new_window 
+	run_cmd "pi"
+fi
 
+if [[ -n "$BDUCK_TMUX_LAYOUT_START_WINDOW" ]]; then
+	select_window "$BDUCK_TMUX_LAYOUT_START_WINDOW"
+else
 	select_window 3
 fi
 
