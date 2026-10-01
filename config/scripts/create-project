@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+project_dir="$1"
+
+echo "Enter project name: "
+read -r project_name
+
+new_project=$project_dir/$project_name
+echo $new_project
+mkdir $new_project
+BDUCK_TMUX_SESSION_DIR="$new_project" tmuxifier load-session dev
