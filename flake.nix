@@ -32,27 +32,44 @@
 
   outputs =
     inputs@{ nixpkgs, home-manager, ... }:
-    {
-      nixosConfigurations.nixos-desktop = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
-        specialArgs = { inherit inputs; };
-        modules = [
-          ./hosts/nixos-desktop/default.nix
-          home-manager.nixosModules.home-manager
-          {
-            home-manager = {
-              useGlobalPkgs = true;
-              useUserPackages = true;
-              backupFileExtension = "backup";
-              extraSpecialArgs = { inherit inputs; };
-              users.bduck = import ./home.nix;
 
-              sharedModules = [
-                inputs.spicetify-nix.homeManagerModules.spicetify
-              ];
-            };
-          }
-        ];
+    let
+      mkHost =
+        hostModule:
+        nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+
+          specialArgs = {
+            inherit inputs;
+          };
+
+          modules = [
+            hostModule
+
+            home-manager.nixosModules.home-manager
+
+            {
+              home-manager = {
+                useGlobalPkgs = true;
+                useUserPackages = true;
+                backupFileExtension = "backup";
+
+                extraSpecialArgs = { inherit inputs; };
+
+                users.bduck = import ./home.nix;
+
+                sharedModules = [
+                  inputs.spicetify-nix.homeManagerModules.spicetify
+                ];
+              };
+            }
+          ];
+        };
+    in
+    {
+      nixosConfigurations = {
+        nixos-desktop = mkHost ./hosts/nixos-desktop;
+        nixos-laptop = mkHost ./hosts/nixos-laptop;
       };
     };
 }

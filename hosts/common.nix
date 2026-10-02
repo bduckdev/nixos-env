@@ -30,6 +30,7 @@
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINZ4rzsuIDoo/u5X89OShjMZ1fSH5o12gMrBwYyKAG+X brennantduck@gmail.com"
     ];
   };
+
   time.timeZone = "America/New_York";
 
   i18n.defaultLocale = "en_US.UTF-8";
@@ -56,10 +57,6 @@
 
   environment = {
     localBinInPath = true;
-
-    sessionVariables = {
-      NH_FLAKE = "/home/bduck/nixos-env/";
-    };
 
     systemPackages = [
       inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default
