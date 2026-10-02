@@ -68,11 +68,17 @@
   };
 
   services = {
-    xserver = {
+    keyd = {
       enable = true;
-      xkb = {
-        layout = "us";
-        variant = "";
+
+      keyboards.default = {
+        ids = [ "*" ];
+
+        settings = {
+          main = {
+            capslock = "esc";
+          };
+        };
       };
     };
     # displayManager.gdm.enable = true;
