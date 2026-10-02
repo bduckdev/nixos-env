@@ -31,7 +31,12 @@
   };
 
   outputs =
-    inputs@{ nixpkgs, home-manager, ... }:
+    inputs@{
+      self,
+      nixpkgs,
+      home-manager,
+      ...
+    }:
 
     let
       mkHost =
@@ -47,6 +52,14 @@
             hostModule
 
             home-manager.nixosModules.home-manager
+            {
+              assertions = [
+                {
+                  assertion = !(self ? dirtyRev);
+                  message = "Git tree is dirty. Commit or stash your changes before rebuilding.";
+                }
+              ];
+            }
 
             {
               home-manager = {
