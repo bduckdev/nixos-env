@@ -204,61 +204,68 @@ in
       ];
 
       extraConfig = ''
-         set -g allow-passthrough on
-         set -g repeat-time 150
+        set -g allow-passthrough on
+        set -g repeat-time 150
 
 
-         set -g extended-keys on
-         set -g extended-keys-format csi-u
+        set -g extended-keys on
+        set -g extended-keys-format csi-u
 
-         # set -g status-position top
-         bind-key -n C-g display-popup -E -d '#{pane_current_path}' -w 80% -h 80% "lazygit"
-         unbind t
-         bind t display-popup -E -w 80% -h 80% "$SHELL -f"
+        # set -g status-position top
+        bind-key -n C-g display-popup -E -d '#{pane_current_path}' -w 80% -h 80% "lazygit"
+        unbind t
+        bind t display-popup -E -w 80% -h 80% "$SHELL -f"
 
 
-         set -g set-clipboard on
+        set -g set-clipboard on
 
-         setw -g mode-keys vi
-         bind -T copy-mode-vi v send-keys -X begin-selection
-         #bind -T copy-mode-vi y send-keys -X copy-pipe-and-cancel '${pkgs.xclip}/bin/xclip -in -selection clipboard'
-         bind -T copy-mode-vi y send-keys -X copy-pipe-and-cancel 'wl-copy'
+        setw -g mode-keys vi
+        bind -T copy-mode-vi v send-keys -X begin-selection
+        #bind -T copy-mode-vi y send-keys -X copy-pipe-and-cancel '${pkgs.xclip}/bin/xclip -in -selection clipboard'
+        bind -T copy-mode-vi y send-keys -X copy-pipe-and-cancel 'wl-copy'
 
-         # Pane navigation
-         bind-key h select-pane -L
-         bind-key j select-pane -D
-         bind-key k select-pane -U
-         bind-key l select-pane -R
+        # Window navigation
+        bind-key -n M-1 select-window -t :=1
+        bind-key -n M-2 select-window -t :=2
+        bind-key -n M-3 select-window -t :=3
+        bind-key -n M-4 select-window -t :=4
+        bind-key -n M-5 select-window -t :=5
+        bind-key -n M-6 select-window -t :=6
+        bind-key -n M-7 select-window -t :=7
+        bind-key -n M-8 select-window -t :=8
+        bind-key -n M-9 select-window -t :=9 
 
-         # Swap panes
-         bind-key -r C-h swap-pane -s '{left-of}'
-         bind-key -r C-j swap-pane -s '{down-of}'
-         bind-key -r C-k swap-pane -s '{up-of}'
-         bind-key -r C-l swap-pane -s '{right-of}'
+        # Pane navigation
+        bind-key h select-pane -L
+        bind-key j select-pane -D
+        bind-key k select-pane -U
+        bind-key l select-pane -R
 
-         # Resize panes
-         bind-key -r H resize-pane -L 20
-         bind-key -r J resize-pane -D 10
-         bind-key -r K resize-pane -U 10
-         bind-key -r L resize-pane -R 20
+        # Swap panes
+        bind-key -r C-h swap-pane -s '{left-of}'
+        bind-key -r C-j swap-pane -s '{down-of}'
+        bind-key -r C-k swap-pane -s '{up-of}'
+        bind-key -r C-l swap-pane -s '{right-of}'
 
-        # setw -g automatic-rename off
-        # setw -g allow-rename off
+        # Resize panes
+        bind-key -r H resize-pane -L 10
+        bind-key -r J resize-pane -D 10
+        bind-key -r K resize-pane -U 10
+        bind-key -r L resize-pane -R 10
 
-         # Catppuccin window formatting
+        # Catppuccin window formatting
 
-         # Status bar
-         set -g status-justify absolute-centre
-         set -g status-right-length 99
-         set -g status-left-length 99
-         set -g status-left "#{E:@catppuccin_status_session}"
+        # Status bar
+        set -g status-justify absolute-centre
+        set -g status-right-length 99
+        set -g status-left-length 99
+        set -g status-left "#{E:@catppuccin_status_session}"
 
-         set -g status-right "#{E:@catppuccin_status_application}"
-         #set -agF status-right "#{E:@catppuccin_status_cpu}"
-         #set -agF status-right "#{E:@catppuccin_status_ram}"
-         set -ag status-right "#{E:@catppuccin_status_uptime}"
-         # set -agF status-right "#{E:@catppuccin_status_battery}"
-
+        set -g status-right "#{E:@catppuccin_status_application}"
+        #set -agF status-right "#{E:@catppuccin_status_cpu}"
+        #set -agF status-right "#{E:@catppuccin_status_ram}"
+        set -ag status-right "#{E:@catppuccin_status_uptime}"
+        # set -agF status-right "#{E:@catppuccin_status_battery}"
       '';
     };
 

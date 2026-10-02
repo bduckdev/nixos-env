@@ -160,10 +160,23 @@
     # displayManager.gdm.enable = true;
     # desktopManager.gnome.enable = true;
 
-    displayManager.sddm = {
+    #displayManager.sddm = {
+    #  enable = true;
+    #  wayland.enable = true;
+    #};
+
+    displayManager.noctalia-greeter = {
       enable = true;
-      wayland.enable = true;
+      settings = {
+        cursor.size = 24;
+        keyboard.layout = "us";
+      };
+      cursorTheme = {
+        package = pkgs.bibata-cursors;
+        name = "Bibata-Modern-Ice";
+      };
     };
+
     desktopManager.plasma6.enable = true;
     printing.enable = true;
 
