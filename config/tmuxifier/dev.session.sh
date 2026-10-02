@@ -1,10 +1,12 @@
 session_root "${BDUCK_TMUX_LAYOUT_SESSION_DIR}"
 
 BDUCK_TMUX_LAYOUT_SESSION_NAME=$(basename "$BDUCK_TMUX_LAYOUT_SESSION_DIR" | tr '. ' '__')
+BDUCK_TMUX_LAYOUT_NVIM_SOCKET="/tmp/nvim-${BDUCK_TMUX_LAYOUT_SESSION_NAME}.sock"
+BDUCK_TMUX_LAYOUT_NVIM_COMMAND="nvim --listen \"$BDUCK_TMUX_LAYOUT_NVIM_SOCKET\""
 
 if initialize_session "${BDUCK_TMUX_LAYOUT_SESSION_NAME}"; then
 	new_window 
-	run_cmd "while nvim; do true; done"
+	run_cmd "while ${BDUCK_TMUX_LAYOUT_NVIM_COMMAND}; do true; done"
 
 	new_window 
 

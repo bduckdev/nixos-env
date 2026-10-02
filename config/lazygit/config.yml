@@ -30,3 +30,12 @@ gui:
       - "#e8796f"
     defaultFgColor:
       - "#ffffff"
+os:
+  edit: >
+    project="$(basename "$(git rev-parse --show-toplevel)")";
+    nvim --server "/tmp/nvim-$project.sock" --remote "{{filename}}";
+    tmux switch-client -t "$project";
+    tmux select-window -t "$project:nvim";
+    tmux display-popup -C;
+
+promptToReturnFromSubprocess: false
