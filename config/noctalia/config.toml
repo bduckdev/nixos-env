@@ -15,6 +15,10 @@ enabled = true
 match = "HDMI-A-1"
 enabled = false
 
+[bar.default.monitor.builtin]
+match = "eDP-1"
+enabled = true
+
 [bar.secondary.monitor.main]
 match = "DP-1"
 enabled = false
@@ -23,8 +27,13 @@ enabled = false
 match = "HDMI-A-1"
 enabled = true
 
+[bar.secondary.monitor.builtin]
+match = "eDP-1"
+enabled = false
+
 [dock]
 shadow = false
 
 [shell.panel]
 shadow = false
+
