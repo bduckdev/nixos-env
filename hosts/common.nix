@@ -77,6 +77,7 @@
         settings = {
           main = {
             capslock = "esc";
+            delete = "leftmeta";
           };
         };
       };
