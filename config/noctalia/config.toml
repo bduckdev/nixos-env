@@ -8,27 +8,27 @@ shadow = false
 contact_shadow = false
 
 [bar.default.monitor.main]
-match = "DP-1"
+match = "XG27JCG"
 enabled = true
 
 [bar.default.monitor.secondary]
-match = "HDMI-A-1"
+match = "MQ16FC"
 enabled = false
 
 [bar.default.monitor.builtin]
-match = "eDP-1"
+match = "Naijing CEC Panda"
 enabled = true
 
 [bar.secondary.monitor.main]
-match = "DP-1"
+match = "XG27JCG"
 enabled = false
 
 [bar.secondary.monitor.secondary]
-match = "HDMI-A-1"
+match = "MQ16FC"
 enabled = true
 
 [bar.secondary.monitor.builtin]
-match = "eDP-1"
+match = "Naijing CEC Panda"
 enabled = false
 
 [dock]
