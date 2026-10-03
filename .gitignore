@@ -8,5 +8,6 @@ config/pi/agent/*
 config/pi/agent/extensions/*
 !config/pi/agent/extensions/penguin-header.ts
 !config/pi/agent/extensions/nv.ts
+!config/pi/agent/extensions/searxng.ts
 
 .luarc.json
