@@ -10,4 +10,13 @@ config/pi/agent/extensions/*
 !config/pi/agent/extensions/nv.ts
 !config/pi/agent/extensions/searxng.ts
 
+# not useful to track because they're all stateful
+config/herdr/plugins.json
+config/hypr/noctalia.lua
+config/kitty/themes/noctalia.conf
+config/kitty/current-theme.conf
+
+# Backups
+*.bak
+
 .luarc.json
