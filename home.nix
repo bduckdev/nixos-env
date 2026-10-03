@@ -16,7 +16,6 @@ let
     ghostty = "ghostty";
     lazygit = "lazygit";
     kitty = "kitty";
-    mango = "mango";
     noctalia = "noctalia";
     nvim = "nvim";
     yazit = "yazi";
