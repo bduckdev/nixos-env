@@ -16,7 +16,7 @@ match = "MQ16FC"
 enabled = false
 
 [bar.default.monitor.builtin]
-match = "Naijing CEC Panda"
+match = "Najing CEC Panda"
 enabled = true
 
 [bar.secondary.monitor.main]
@@ -28,7 +28,7 @@ match = "MQ16FC"
 enabled = true
 
 [bar.secondary.monitor.builtin]
-match = "Naijing CEC Panda"
+match = "Najing CEC Panda"
 enabled = false
 
 [dock]
