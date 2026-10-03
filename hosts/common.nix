@@ -49,6 +49,10 @@
   security.rtkit.enable = true;
 
   programs = {
+    hyprland = {
+      enable = true;
+      withUWSM = true;
+    };
     dconf.enable = true;
     noctalia.enable = true;
     zsh.enable = true;
