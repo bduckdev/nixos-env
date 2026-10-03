@@ -92,6 +92,7 @@
     displayManager.noctalia-greeter = {
       enable = true;
       settings = {
+        appearance.scheme = "Synced";
         cursor.size = 24;
         keyboard.layout = "us";
       };
