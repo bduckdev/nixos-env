@@ -6,7 +6,7 @@
 
 {
   imports = [
-    inputs.mango.nixosModules.mango
+    ../modules/mango.nix
   ];
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
@@ -50,7 +50,6 @@
 
   programs = {
     dconf.enable = true;
-    mango.enable = true;
     noctalia.enable = true;
     zsh.enable = true;
   };
@@ -115,14 +114,6 @@
     };
 
     tailscale.enable = true;
-  };
-
-  systemd.user.targets.mango-session = {
-    description = "Mango compositor session";
-    documentation = [ "man:systemd.special(7)" ];
-    bindsTo = [ "graphical-session.target" ];
-    wants = [ "graphical-session-pre.target" ];
-    after = [ "graphical-session-pre.target" ];
   };
 
   nixpkgs.config.allowUnfree = true;
