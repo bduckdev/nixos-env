@@ -309,7 +309,7 @@ in
         "alt+super+ctrl,right,scroller_stack,right"
         "alt+super+ctrl,up,scroller_stack,up"
         "alt+super+ctrl,down,scroller_stack,down"
-        "super+shift,n,switch_layout"
+        "alt+shift,l,switch_layout"
 
         # Adjacent tag navigation
         "super,p,viewtoleft,0"

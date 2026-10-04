@@ -211,7 +211,7 @@ in
         set -g extended-keys on
         set -g extended-keys-format csi-u
 
-        # set -g status-position top
+        set -g status-position top
         bind-key -n C-g display-popup -E -d '#{pane_current_path}' -w 80% -h 80% "exec lazygit"
         unbind t
         bind t display-popup -E -w 80% -h 80% "$SHELL -f"
