@@ -14,7 +14,7 @@
   };
 
   home-manager.users.bduck.services.shikane = {
-    enable = false;
+    enable = true;
 
     settings.profile = [
       {

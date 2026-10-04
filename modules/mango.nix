@@ -15,7 +15,6 @@ in
 
   programs.mango.enable = true;
 
-  # Make Mango's Home Manager options available to bduck.
   home-manager.sharedModules = [
     inputs.mango.hmModules.mango
   ];
@@ -23,8 +22,6 @@ in
   home-manager.users.bduck.wayland.windowManager.mango = {
     enable = true;
 
-    # Replaces the hand-written autostart.sh + mango-session target.
-    # Mango's HM module supplies the reset-failed/start-target commands itself.
     systemd = {
       enable = true;
       variables = [
@@ -42,7 +39,6 @@ in
       noctalia &
     '';
 
-    # Keep Noctalia's generated colors after the static Mango settings.
     bottomPrefixes = [ "source" ];
 
     settings = {
@@ -71,8 +67,8 @@ in
       # ========================================================================
 
       monitorrule = [
-        "model:XG27JCG,width:5120,height:2880,refresh:120,x:0,y:0,scale:2.0"
         "model:MQ16FC,width:1920,height:1200,refresh:60,x:2560,y:0,scale:1.0,rr:1"
+        "model:XG27JCG,width:5120,height:2880,refresh:${if isLaptop then "60" else "120"},x:0,y:0,scale:2.0"
       ]
       ++ lib.optionals isLaptop [
         "model:0x0067,width:1920,height:1080,refresh:60,x:3760,y:0,scale:1.0"
@@ -251,7 +247,7 @@ in
       numlockon = 0;
       xkb_rules_layout = "us";
 
-      devicerule = "name:sonix usb device,kb_layout:us,kb_options:caps:escape";
+      #devicerule = "name:sonix usb device,kb_layout:us,kb_options:caps:escape";
 
       disable_trackpad = 0;
       tap_to_click = 1;
