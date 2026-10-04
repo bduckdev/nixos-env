@@ -163,7 +163,7 @@ in
       # ANIMATIONS
       # ========================================================================
 
-      animations = 0;
+      animations = 1;
       layer_animations = 1;
       animation_type_open = "slide";
       animation_type_close = "slide";
