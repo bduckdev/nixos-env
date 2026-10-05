@@ -261,6 +261,7 @@ in
         set -g status-left-length 99
         set -g status-left "#{E:@catppuccin_status_session}"
 
+        set -g status-style 'bg=default'
         set -g status-right "#{E:@catppuccin_status_application}"
         #set -agF status-right "#{E:@catppuccin_status_cpu}"
         #set -agF status-right "#{E:@catppuccin_status_ram}"

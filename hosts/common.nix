@@ -5,9 +5,6 @@
 }:
 
 {
-  imports = [
-    ../modules/mango.nix
-  ];
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
@@ -45,6 +42,10 @@
     LC_TELEPHONE = "en_US.UTF-8";
     LC_TIME = "en_US.UTF-8";
   };
+
+  networking.extraHosts = ''
+    127.0.0.1 reddit.com
+  '';
 
   security.rtkit.enable = true;
 
@@ -99,6 +100,7 @@
         appearance.scheme = "Synced";
         cursor.size = 24;
         keyboard.layout = "us";
+        output.name = "ASUSTek COMPUTER INC XG27JCG";
       };
       cursorTheme = {
         package = pkgs.bibata-cursors;
