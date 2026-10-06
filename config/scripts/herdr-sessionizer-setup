@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+# Pin fresh installs to the Sessionizer revision used by mac_env.
+# Preserve existing installations, including locally linked development copies.
+source_repo="andrewchng/herdr-sessionizer"
+source_ref="e3cdab0d8886c9dc2c50a6e09da334d6508fae7b"
+
+for tool in herdr jq bun fzf; do
+  if ! command -v "$tool" >/dev/null 2>&1; then
+    printf 'herdr-sessionizer-setup: missing required tool: %s\n' "$tool" >&2
+    exit 1
+  fi
+done
+
+plugins="$(herdr plugin list --json)"
+if ! jq -e '.result.plugins | type == "array"' <<<"$plugins" >/dev/null; then
+  printf 'herdr-sessionizer-setup: could not read the installed plugin registry\n' >&2
+  exit 1
+fi
+if jq -e '.result.plugins | any(.plugin_id == "sessionizer")' <<<"$plugins" >/dev/null; then
+  if ! jq -e '.result.plugins | any(.plugin_id == "sessionizer" and .enabled)' <<<"$plugins" >/dev/null; then
+    herdr plugin enable sessionizer
+  fi
+else
+  if ! command -v git >/dev/null 2>&1; then
+    printf 'herdr-sessionizer-setup: missing required tool: git\n' >&2
+    exit 1
+  fi
+  herdr plugin install "$source_repo" --ref "$source_ref" --yes
+fi
+
+printf 'Sessionizer is ready.\n'

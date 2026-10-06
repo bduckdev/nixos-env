@@ -2,6 +2,7 @@
   inputs,
   pkgs,
   config,
+  lib,
   ...
 }:
 
@@ -36,6 +37,22 @@ in
       ".pi".source = create_symlink "${dotfiles}/pi";
     };
   };
+
+  # The plugin registry is machine-local; install Sessionizer after linking configs.
+  home.activation.herdrSessionizer = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
+    run ${pkgs.coreutils}/bin/env \
+      PATH="${
+        lib.makeBinPath [
+          pkgs.herdr
+          pkgs.bun
+          pkgs.nodejs
+          pkgs.git
+          pkgs.jq
+          pkgs.fzf
+        ]
+      }:$PATH" \
+      ${pkgs.bash}/bin/bash "${dotfiles}/scripts/herdr-sessionizer-setup"
+  '';
 
   gtk = {
     enable = true;
@@ -288,6 +305,7 @@ in
         og = "nvim '~/Documents/cool-vault1/5 - Main Notes/GOALS.md'";
         of = "nvim -c 'Obsidian quick_switch'";
         ta = "tmux a";
+        hm = ''herdr-project "$HOME/nixos-env"'';
         tm = "BDUCK_TMUX_LAYOUT_START_WINDOW=3 BDUCK_TMUX_LAYOUT_SESSION_DIR=~/nixos-env tmuxifier load-session dev";
         hms = "nh search options --scope home-manager";
       };
@@ -354,6 +372,7 @@ in
     clang
     clang-manpages
     clang-tools
+    claude-code
     cmake
     codex
     deja

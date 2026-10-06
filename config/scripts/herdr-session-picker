@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+selected="$(
+  herdr api snapshot |
+    jq -r '
+      .result.snapshot as $snapshot
+      | $snapshot.workspaces[] as $workspace
+      | (
+          [
+            "workspace",
+            $workspace.workspace_id,
+            (if $workspace.focused then "* session  " else "  session  " end)
+              + $workspace.label
+          ],
+          (
+            $snapshot.tabs[]
+            | select(.workspace_id == $workspace.workspace_id)
+            | [
+                "tab",
+                .tab_id,
+                (if .focused then "*   window " else "    window " end)
+                  + (.number | tostring)
+                  + ": "
+                  + .label
+              ]
+          )
+        )
+      | @tsv
+    ' |
+    fzf \
+      --delimiter=$'\t' \
+      --with-nth=3 \
+      --nth=3 \
+      --no-sort \
+      --layout=reverse \
+      --border \
+      --prompt='session/window> '
+)" || exit 0
+
+IFS=$'\t' read -r target_type target_id _ <<<"$selected"
+
+case "$target_type" in
+  workspace | tab)
+    herdr "$target_type" focus "$target_id" >/dev/null
+    ;;
+esac

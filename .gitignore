@@ -12,6 +12,12 @@ config/pi/agent/extensions/*
 
 # not useful to track because they're all stateful
 config/herdr/plugins.json
+config/herdr/.plugins.lock
+config/herdr/plugins/github/
+config/herdr/*.json
+config/herdr/*.sock*
+config/herdr/session-snapshots/
+config/herdr/sessions/
 config/hypr/noctalia.lua
 config/kitty/themes/noctalia.conf
 config/kitty/current-theme.conf
@@ -20,3 +26,5 @@ config/kitty/current-theme.conf
 *.bak
 
 .luarc.json
+.claude/
+.sessionizer/

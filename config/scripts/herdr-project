@@ -1,0 +1,321 @@
+#!/usr/bin/env bun
+
+import { existsSync, readFileSync, statSync } from "node:fs";
+import { basename, join, resolve } from "node:path";
+import { homedir } from "node:os";
+
+const decoder = new TextDecoder();
+const requestedPath = process.argv[2];
+
+if (!requestedPath) {
+  console.error("Usage: herdr-project <directory> [workspace-label]");
+  process.exit(2);
+}
+
+const projectPath = resolve(
+  requestedPath === "~"
+    ? homedir()
+    : requestedPath.startsWith("~/")
+      ? join(homedir(), requestedPath.slice(2))
+      : requestedPath,
+);
+const workspaceLabel = process.argv[3] || basename(projectPath);
+const sessionName = process.env.HERDR_PROJECT_SESSION;
+const herdr = sessionName
+  ? ["herdr", "--session", sessionName]
+  : ["herdr"];
+
+if (!existsSync(projectPath) || !statSync(projectPath).isDirectory()) {
+  console.error(`herdr-project: not a directory: ${projectPath}`);
+  process.exit(1);
+}
+
+function run(args, { allowFailure = false } = {}) {
+  const result = Bun.spawnSync([...herdr, ...args], {
+    cwd: projectPath,
+    stdin: "ignore",
+    stdout: "pipe",
+    stderr: "pipe",
+  });
+  const stdout = decoder.decode(result.stdout).trim();
+  const stderr = decoder.decode(result.stderr).trim();
+
+  if (result.exitCode !== 0 && !allowFailure) {
+    throw new Error(stderr || stdout || `herdr exited with ${result.exitCode}`);
+  }
+
+  return { exitCode: result.exitCode, stdout, stderr };
+}
+
+function parseJson(output) {
+  const text = output.stdout || output.stderr;
+  try {
+    return JSON.parse(text);
+  } catch {
+    throw new Error(text || "herdr returned no JSON");
+  }
+}
+
+function runJson(args) {
+  const output = run(args);
+  const parsed = parseJson(output);
+  if (parsed.error) {
+    throw new Error(parsed.error.message || JSON.stringify(parsed.error));
+  }
+  return parsed;
+}
+
+function tryWorkspaceList() {
+  const output = run(["workspace", "list"], { allowFailure: true });
+  if (output.exitCode === 0) return parseJson(output);
+
+  let error;
+  try {
+    error = parseJson(output).error;
+  } catch {
+    throw new Error(output.stderr || output.stdout);
+  }
+  if (error?.code === "server_not_running") return undefined;
+  throw new Error(error?.message || output.stderr || output.stdout);
+}
+
+async function ensureServer() {
+  let list = tryWorkspaceList();
+  if (list) return { started: false, list };
+
+  const server = Bun.spawn(["nohup", ...herdr, "server"], {
+    cwd: projectPath,
+    stdin: "ignore",
+    stdout: "ignore",
+    stderr: "ignore",
+  });
+  server.unref();
+
+  for (let attempt = 0; attempt < 50; attempt += 1) {
+    await Bun.sleep(100);
+    list = tryWorkspaceList();
+    if (list) return { started: true, list };
+  }
+
+  throw new Error("timed out waiting for the Herdr server to start");
+}
+
+function configPath() {
+  const override = process.env.HERDR_PROJECT_CONFIG;
+  if (override) return resolve(override);
+
+  const local = join(projectPath, ".sessionizer", "config.toml");
+  if (existsSync(local)) return local;
+
+  return join(
+    homedir(),
+    ".config",
+    "herdr",
+    "plugins",
+    "config",
+    "sessionizer",
+    "config.toml",
+  );
+}
+
+function loadLayout() {
+  const path = configPath();
+  if (!existsSync(path)) {
+    throw new Error(`Sessionizer layout config not found: ${path}`);
+  }
+
+  const config = Bun.TOML.parse(readFileSync(path, "utf8"));
+  const tabs = Object.entries(config.tabs || {}).map(([id, tab]) => ({
+    id,
+    label: tab.label || id,
+    panes: tab.panes || [],
+  }));
+  const focus = config.layout?.focus || "";
+
+  if (tabs.length > 0 && !focus) {
+    throw new Error(`Sessionizer layout has tabs but no [layout].focus: ${path}`);
+  }
+
+  return { focus, tabs };
+}
+
+function configurePane(paneId, pane) {
+  if (pane.title) run(["pane", "rename", paneId, pane.title]);
+  if (pane.command) run(["pane", "run", paneId, pane.command]);
+}
+
+function tabContainsFocus(tab, focus) {
+  return (
+    tab.id === focus ||
+    tab.label === focus ||
+    tab.panes.some((pane) => pane.id === focus)
+  );
+}
+
+function configureTab(tabId, rootPaneId, tab, focus) {
+  run(["tab", "rename", tabId, tab.label]);
+
+  const panes = tab.panes.length > 0 ? tab.panes : [{}];
+  const paneIds = new Map();
+  const root = panes[0];
+  if (root.id) paneIds.set(root.id, rootPaneId);
+  configurePane(rootPaneId, root);
+
+  let previousPaneId = rootPaneId;
+  for (const pane of panes.slice(1)) {
+    const anchorPaneId = pane.from ? paneIds.get(pane.from) : previousPaneId;
+    if (!anchorPaneId) {
+      throw new Error(
+        `tab '${tab.id}' references unknown pane '${pane.from}'`,
+      );
+    }
+
+    const args = [
+      "pane",
+      "split",
+      anchorPaneId,
+      "--direction",
+      pane.split || "right",
+      "--cwd",
+      projectPath,
+    ];
+    if (pane.ratio !== undefined) args.push("--ratio", String(pane.ratio));
+    args.push(pane.id === focus ? "--focus" : "--no-focus");
+
+    const created = runJson(args).result.pane;
+    if (pane.id) paneIds.set(pane.id, created.pane_id);
+    configurePane(created.pane_id, pane);
+    previousPaneId = created.pane_id;
+  }
+}
+
+async function findWorkspace(workspaces) {
+  for (const workspace of workspaces) {
+    try {
+      const panes = runJson([
+        "pane",
+        "list",
+        "--workspace",
+        workspace.workspace_id,
+      ]).result.panes;
+      if (
+        panes.some(
+          (pane) =>
+            resolve(pane.cwd || pane.foreground_cwd || homedir()) === projectPath,
+        )
+      ) {
+        return workspace;
+      }
+    } catch {
+      // Fall back to the stable workspace label below.
+    }
+  }
+
+  return workspaces.find((workspace) => workspace.label === workspaceLabel);
+}
+
+async function createWorkspace(layout) {
+  const created = runJson([
+    "workspace",
+    "create",
+    "--cwd",
+    projectPath,
+    "--label",
+    workspaceLabel,
+    "--no-focus",
+  ]).result;
+  const workspace = created.workspace;
+
+  if (layout.tabs.length === 0) return workspace;
+
+  try {
+    let focusedTabId = created.tab.tab_id;
+    const [firstTab, ...remainingTabs] = layout.tabs;
+    configureTab(
+      created.tab.tab_id,
+      created.root_pane.pane_id,
+      firstTab,
+      layout.focus,
+    );
+    if (tabContainsFocus(firstTab, layout.focus)) {
+      focusedTabId = created.tab.tab_id;
+    }
+
+    for (const tab of remainingTabs) {
+      const shouldFocus = tabContainsFocus(tab, layout.focus);
+      const args = [
+        "tab",
+        "create",
+        "--workspace",
+        workspace.workspace_id,
+        "--cwd",
+        projectPath,
+        "--label",
+        tab.label,
+        shouldFocus ? "--focus" : "--no-focus",
+      ];
+      const tabCreated = runJson(args).result;
+      configureTab(
+        tabCreated.tab.tab_id,
+        tabCreated.root_pane.pane_id,
+        tab,
+        layout.focus,
+      );
+      if (shouldFocus) focusedTabId = tabCreated.tab.tab_id;
+    }
+
+    run(["tab", "focus", focusedTabId]);
+    return workspace;
+  } catch (error) {
+    run(["workspace", "close", workspace.workspace_id], {
+      allowFailure: true,
+    });
+    throw error;
+  }
+}
+
+async function main() {
+  const initial = await ensureServer();
+  const initialWorkspaces = initial.list.result.workspaces;
+  let workspace = await findWorkspace(initialWorkspaces);
+
+  if (!workspace) {
+    const layout = loadLayout();
+    workspace = await createWorkspace(layout);
+  }
+
+  run(["workspace", "focus", workspace.workspace_id]);
+
+  // A headless server starts with a placeholder home workspace. Remove only the
+  // placeholder created by this invocation, after the requested workspace exists.
+  if (
+    initial.started &&
+    initialWorkspaces.length === 1 &&
+    initialWorkspaces[0].label === "~" &&
+    initialWorkspaces[0].workspace_id !== workspace.workspace_id
+  ) {
+    run(["workspace", "close", initialWorkspaces[0].workspace_id]);
+    run(["workspace", "focus", workspace.workspace_id]);
+  }
+
+  if (process.env.HERDR_ENV === "1" || process.env.HERDR_PROJECT_NO_ATTACH) {
+    return;
+  }
+
+  const client = Bun.spawnSync(herdr, {
+    cwd: projectPath,
+    stdin: "inherit",
+    stdout: "inherit",
+    stderr: "inherit",
+  });
+  process.exitCode = client.exitCode;
+}
+
+try {
+  await main();
+} catch (error) {
+  console.error(
+    `herdr-project: ${error instanceof Error ? error.message : String(error)}`,
+  );
+  process.exitCode = 1;
+}
