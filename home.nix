@@ -14,6 +14,7 @@ let
     bat = "bat";
     delta = "delta";
     ghostty = "ghostty";
+    herdr = "herdr";
     hypr = "hypr";
     lazygit = "lazygit";
     kitty = "kitty";

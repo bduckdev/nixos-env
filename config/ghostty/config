@@ -34,3 +34,6 @@ window-padding-y = 6
 confirm-close-surface = false
 cursor-style = "block"
 
+# send an explicit Ctrl+Tab sequence for Herdr's last-pane binding
+keybind = ctrl+tab=csi:9;5u
+
