@@ -6,6 +6,7 @@
   imports = [
     ../common.nix
     ./hardware-configuration.nix
+    ./sunshine.nix
   ];
   hardware.graphics.enable32Bit = true;
 

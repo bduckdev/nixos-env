@@ -13,5 +13,10 @@
     networkmanager.enable = true;
   };
 
+  programs.moonlight-qt = {
+    enable = true;
+    capSysNice = true;
+  };
+
   system.stateVersion = "26.05";
 }

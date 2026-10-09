@@ -119,7 +119,10 @@
       pulse.enable = true;
     };
 
-    tailscale.enable = true;
+    tailscale = {
+      enable = true;
+      openFirewall = true;
+    };
   };
 
   nixpkgs.config.allowUnfree = true;
