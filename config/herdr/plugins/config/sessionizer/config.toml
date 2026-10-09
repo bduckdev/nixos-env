@@ -18,7 +18,7 @@ height = "90%"
 # Mirrors `select_window 3` in .tmux-layouts/dev.session.sh (base-index 3 = editor)
 focus = "editor"
 
-# Tabs open in declaration order: _, _, editor, agent, server
+# Tabs open in declaration order: _, _, editor, server, agent
 # Every tab needs at least one [[tabs.<name>.panes]] entry; a pane with no
 # command is left as a plain shell in the project directory.
 [tabs.one]
@@ -37,15 +37,7 @@ label = "editor"
 [[tabs.editor.panes]]
 id = "editor"
 title = "neovim"
-command = "nvim"
-
-[tabs.agent]
-label = "agent"
-
-[[tabs.agent.panes]]
-id = "agent"
-title = "claude code"
-command = "claude"
+command = "while nvim .; do true; done"
 
 [tabs.server]
 label = "server"
@@ -55,3 +47,12 @@ id = "server"
 title = "server"
 # Only run when the project exposes a `dev` make target
 command = "grep -qE '^dev *:' Makefile 2>/dev/null && make dev"
+
+[tabs.agent]
+label = "agent"
+
+[[tabs.agent.panes]]
+id = "agent"
+title = "pi"
+command = "pi"
+
