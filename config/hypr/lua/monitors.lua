@@ -42,7 +42,23 @@ function M.update()
 	set_workspaces(M.main)
 end
 
-function M.setup()
+function M.setup(hostname)
+	if hostname == "nixos-desktop" then
+		hl.monitor({
+			output = "STREAM",
+			mode = "1920x1080@60",
+			position = "auto",
+			scale = 1,
+		})
+	elseif hostname == "nixos-laptop" then
+		hl.monitor({
+			output = builtin,
+			mode = "1920x1080@60",
+			position = "auto",
+			scale = 1,
+		})
+	end
+
 	hl.monitor({
 		output = "desc:" .. asus_27inch_5k,
 		mode = "5120x2880@120",
@@ -64,6 +80,12 @@ function M.setup()
 		mode = "1920x1080@60",
 		position = "auto",
 		scale = "1",
+	})
+	hl.monitor({
+		output = "STREAM",
+		mode = "1920x1080@60",
+		position = "auto",
+		scale = 1,
 	})
 
 	hl.on("monitor.added", M.update)

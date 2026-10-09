@@ -13,6 +13,7 @@ local ipc = "noctalia msg "
 ---- AUTOSTART ----
 -------------------
 hl.on("hyprland.start", function()
+	hl.exec_cmd("hyprctl output create headless STREAM")
 	hl.exec_cmd("noctalia")
 	hl.exec_cmd("kitty")
 	hl.exec_cmd("firefox")
@@ -307,6 +308,13 @@ hl.window_rule({
 --	rounding = 0,
 --})
 
+hl.window_rule({
+	name = "workspace-1-floating",
+	match = {
+		workspace = "1",
+	},
+	float = true,
+})
 hl.window_rule({
 	match = { class = "dev.noctalia.Noctalia" },
 	float = true,
