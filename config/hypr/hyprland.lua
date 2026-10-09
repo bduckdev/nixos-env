@@ -14,6 +14,12 @@ local ipc = "noctalia msg "
 -------------------
 hl.on("hyprland.start", function()
 	hl.exec_cmd("noctalia")
+	hl.exec_cmd("kitty")
+	hl.exec_cmd("firefox")
+	hl.exec_cmd("obsidian")
+	hl.exec_cmd("discord")
+	hl.exec_cmd("Telegram")
+	hl.dsp.focus({ workspace = 3 })
 end)
 
 -------------------------------
@@ -55,11 +61,6 @@ hl.config({
 
 		border_size = 2,
 
-		--col = {
-		--	active_border = { colors = { "rgba(33ccffee)", "rgba(00ff99ee)" }, angle = 45 },
-		--	inactive_border = "rgba(595959aa)",
-		--},
-
 		-- Set to true to enable resizing windows by clicking and dragging on borders and gaps
 		resize_on_border = false,
 
@@ -70,7 +71,7 @@ hl.config({
 	},
 
 	decoration = {
-		rounding = 10,
+		rounding = 0,
 		rounding_power = 2,
 
 		-- Change transparency of focused and unfocused windows
@@ -86,7 +87,7 @@ hl.config({
 
 		blur = {
 			enabled = true,
-			size = 3,
+			size = 6,
 			passes = 2,
 			vibrancy = 0.1696,
 		},
@@ -124,25 +125,6 @@ hl.animation({ leaf = "workspaces", enabled = true, speed = 1.94, bezier = "almo
 hl.animation({ leaf = "workspacesIn", enabled = true, speed = 1.21, bezier = "almostLinear", style = "fade" })
 hl.animation({ leaf = "workspacesOut", enabled = true, speed = 1.94, bezier = "almostLinear", style = "fade" })
 hl.animation({ leaf = "zoomFactor", enabled = true, speed = 7, bezier = "quick" })
-
--- Ref https://wiki.hypr.land/Configuring/Basics/Workspace-Rules/
--- "Smart gaps" / "No gaps when only"
--- uncomment all if you wish to use that.
-hl.workspace_rule({ workspace = "w[tv1]", gaps_out = 0, gaps_in = 0 })
-hl.workspace_rule({ workspace = "f[1]", gaps_out = 0, gaps_in = 0 })
-hl.window_rule({
-	name = "no-gaps-wtv1",
-	match = { float = false, workspace = "w[tv1]" },
-	border_size = 0,
-	rounding = 0,
-})
-
-hl.window_rule({
-	name = "no-gaps-f1",
-	match = { float = false, workspace = "f[1]" },
-	border_size = 0,
-	rounding = 0,
-})
 
 -- See https://wiki.hypr.land/Configuring/Layouts/Dwindle-Layout/ for more
 hl.config({
@@ -296,12 +278,34 @@ hl.bind("XF86AudioPause", hl.dsp.exec_cmd("playerctl play-pause"), { locked = tr
 hl.bind("XF86AudioPlay", hl.dsp.exec_cmd("playerctl play-pause"), { locked = true })
 hl.bind("XF86AudioPrev", hl.dsp.exec_cmd("playerctl previous"), { locked = true })
 
+-- Screenshots
+hl.bind("CTRL + SHIFT + 4", hl.dsp.exec_cmd("noctalia msg screenshot-region"))
+
 --------------------------------
 ---- WINDOWS AND WORKSPACES ----
 --------------------------------
 
 -- See https://wiki.hypr.land/Configuring/Basics/Window-Rules/
 -- and https://wiki.hypr.land/Configuring/Basics/Workspace-Rules/
+
+-- Ref https://wiki.hypr.land/Configuring/Basics/Workspace-Rules/
+-- "Smart gaps" / "No gaps when only"
+-- uncomment all if you wish to use that.
+-- hl.workspace_rule({ workspace = "w[tv1]", gaps_out = 0, gaps_in = 0 })
+--hl.workspace_rule({ workspace = "f[1]", gaps_out = 0, gaps_in = 0 })
+hl.window_rule({
+	name = "no-gaps-wtv1",
+	match = { float = false, workspace = "w[tv1]" },
+	border_size = 0,
+	rounding = 0,
+})
+--
+--hl.window_rule({
+--	name = "no-gaps-f1",
+--	match = { float = false, workspace = "f[1]" },
+--	border_size = 0,
+--	rounding = 0,
+--})
 
 hl.window_rule({
 	match = { class = "dev.noctalia.Noctalia" },
@@ -310,12 +314,16 @@ hl.window_rule({
 })
 hl.window_rule({
 	match = { class = "^helium$" },
-	workspace = "4",
+	workspace = "4 silent",
 })
 hl.window_rule({
-	match = { class = "^obsidian$" },
+	match = { class = "^firefox$" },
+	workspace = "4 silent",
+})
+
+hl.window_rule({
+	match = { class = "^md.obsidian.Obsidian$" },
 	workspace = "5 silent",
-	float = true,
 })
 hl.window_rule({
 	match = { class = "^org.telegram.desktop$" },
