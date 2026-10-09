@@ -25,6 +25,7 @@
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFt8/My570WXRzBbQi5LNMX7g0Srsw9y+Vjcc1Yj0P0r bduck@continuumcloud.com"
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFXlT1LZafXku9iQAeXMacUwl3A8l1cMBLUIWZ5xtanX"
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINZ4rzsuIDoo/u5X89OShjMZ1fSH5o12gMrBwYyKAG+X brennantduck@gmail.com"
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIP+SLSckUNT/LuVAn8B83lfM5o6KrHvgJxjeKJ6wxMJa brennantduck@gmail.com"
     ];
   };
 
