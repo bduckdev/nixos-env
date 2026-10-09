@@ -229,8 +229,9 @@ in
         set -g extended-keys on
         set -g extended-keys-format csi-u
 
-        set -g status-position top
-        bind-key -n C-g display-popup -E -d '#{pane_current_path}' -w 80% -h 80% "exec lazygit"
+        #set -g status-position top
+        bind-key o display-popup -E -d '#{pane_current_path}' -w 80% -h 80% "exec nvim -c 'Obsidian today'"
+        bind-key g display-popup -E -d '#{pane_current_path}' -w 80% -h 80% "exec lazygit"
         unbind t
         bind t display-popup -E -w 80% -h 80% "$SHELL -f"
 
@@ -299,8 +300,9 @@ in
       fastSyntaxHighlighting.enable = true;
 
       shellAliases = {
-        ls = "lsd -a";
-        ll = "lsd -alF";
+        ls = "eza -lh --group-directories-first --icons=auto";
+        ll = "eza -lh --group-directories-first --icons=auto";
+        la = "eza -lha --group-directories-first --icons=auto";
         ot = "nvim -c 'Obsidian today'";
         og = "nvim '~/Documents/cool-vault1/5 - Main Notes/GOALS.md'";
         of = "nvim -c 'Obsidian quick_switch'";
@@ -372,7 +374,6 @@ in
     clang
     clang-manpages
     clang-tools
-    claude-code
     cmake
     codex
     deja
@@ -381,6 +382,7 @@ in
     discord
     efm-langserver
     emmet-ls
+    eza
     fastfetch
     fd
     firefox
@@ -400,7 +402,6 @@ in
     kitty
     lazygit
     linux-wallpaperengine
-    lsd
     lua5_1
     lua-language-server
     luarocks
