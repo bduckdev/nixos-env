@@ -1,11 +1,31 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
-project_dir="$1"
+is_git_url() {
+   local value="$1"
 
-echo "Enter project name: "
-read -r project_name
+   [[ "$value" == https://* ||
+      "$value" == http://* ||
+      "$value" == ssh://* ||
+      "$value" == git://* ||
+      "$value" == *@*:* ]]
+}
 
-new_project=$project_dir/$project_name
-echo $new_project
-mkdir $new_project
-BDUCK_TMUX_SESSION_DIR="$new_project" tmuxifier load-session dev
+project_dir="${1:?Usage: create-project <parent-directory>}"
+
+read -r -p "Project name or Git URL: " input
+[[ -n "$input" ]] || exit 0
+
+if is_git_url "$input"; then
+   project_name="$(basename -- "${input%/}" .git)"
+   project_name="${project_name##*:}"
+   [[ -n "$project_name" ]] || exit 1
+
+   new_project="$project_dir/$project_name"
+   git clone -- "$input" "$new_project"
+else
+   new_project="$project_dir/$input"
+   mkdir -- "$new_project"
+fi
+
+BDUCK_TMUX_LAYOUT_SESSION_DIR="$new_project" tmuxifier load-session dev
