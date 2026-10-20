@@ -31,12 +31,12 @@ ueberzug_offset = [ 0, 0, 0, 0 ]
 
 [opener]
 edit = [
-	{ run = "${EDITOR:-vi} %s", desc = "$EDITOR",      for = "unix", block = true },
+	{ run = 'nvim "%s1"', desc = "Neovim",      for = "unix", block = true },
 	{ run = "code %s",          desc = "code",         for = "windows", orphan = true },
 	{ run = "code -w %s",       desc = "code (block)", for = "windows", block = true },
 ]
 image_viewer = [
-    { run = 'center-imgcat "$@";  read _', block = true, desc = "imgcat (wezterm", for = "unix" },
+    { run = 'swayimg %s1', block = true, desc = "Open image", for = "unix" },
 ]
 play = [
 	{ run = "xdg-open %s1",    desc = "Play", for = "linux", orphan = true },
