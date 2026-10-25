@@ -178,6 +178,23 @@ in
     };
   };
 
+  qt = {
+    enable = true;
+    platformTheme.name = "qtct";
+
+    qt5ctSettings.Appearance = {
+      style = "Fusion";
+      custom_palette = true;
+      color_scheme_path = "${config.xdg.configHome}/qt5ct/colors/noctalia.conf";
+    };
+
+    qt6ctSettings.Appearance = {
+      style = "Fusion";
+      custom_palette = true;
+      color_scheme_path = "${config.xdg.configHome}/qt6ct/colors/noctalia.conf";
+    };
+  };
+
   home.packages = with pkgs; [
     adw-gtk3
     bat
