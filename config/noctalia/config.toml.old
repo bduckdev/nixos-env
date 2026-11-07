@@ -1,0 +1,49 @@
+[theme]
+mode = "dark"
+source = "custom"
+custom_palette = "Cyberdream"
+
+# Only enable bars on their assigned monitors; unmatched outputs get no bar.
+# External monitors use model names so their connectors can change.
+[bar.default]
+enabled = false
+shadow = false
+contact_shadow = false
+
+[bar.default.monitor.main]
+match = "XG27JCG"
+enabled = true
+
+[bar.default.monitor.secondary]
+match = "MQ16FC"
+enabled = false
+
+[bar.default.monitor.builtin]
+match = "eDP-1"
+enabled = true
+
+[bar.secondary]
+enabled = false
+# Limit this bar's contents without disabling the shared widgets on other bars.
+start = []
+center = ["workspaces"]
+end = []
+
+[bar.secondary.monitor.main]
+match = "XG27JCG"
+enabled = false
+
+[bar.secondary.monitor.secondary]
+match = "MQ16FC"
+enabled = true
+
+[bar.secondary.monitor.builtin]
+match = "eDP-1"
+enabled = false
+
+[dock]
+shadow = false
+
+[shell.panel]
+shadow = false
+

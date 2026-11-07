@@ -1,0 +1,7 @@
+[options]
+fullscreen = true
+overlay = true
+
+[binds]
+n = select_rel 1
+p = select_rel -1

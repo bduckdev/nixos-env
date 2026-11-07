@@ -21,6 +21,8 @@ config/herdr/sessions/
 config/hypr/noctalia.lua
 config/kitty/themes/noctalia.conf
 config/kitty/current-theme.conf
+config/bat/themes/noctalia.tmTheme
+config/yazi/flavors/noctalia*
 
 # Backups
 *.bak
@@ -28,3 +30,6 @@ config/kitty/current-theme.conf
 .luarc.json
 .claude/
 .sessionizer/
+
+assets/wallpapers/wallhaven
+
