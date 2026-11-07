@@ -44,8 +44,19 @@
     LC_TIME = "en_US.UTF-8";
   };
 
+  networking.stevenblack = {
+    enable = true;
+    block = [
+      "fakenews"
+      "gambling"
+      "porn"
+      "social"
+    ];
+  };
+
   networking.extraHosts = ''
-    127.0.0.1 reddit.com
+    0.0.0.0 bing.com
+    0.0.0.0 youtube.com
   '';
 
   security.rtkit.enable = true;
@@ -73,6 +84,10 @@
   };
 
   services = {
+    desktopManager.plasma6.enable = true;
+
+    displayManager.ly.enable = true;
+
     keyd = {
       enable = true;
 
@@ -82,34 +97,11 @@
         settings = {
           main = {
             capslock = "esc";
-            delete = "leftmeta";
           };
         };
       };
     };
-    # displayManager.gdm.enable = true;
-    # desktopManager.gnome.enable = true;
 
-    #displayManager.sddm = {
-    #  enable = true;
-    #  wayland.enable = true;
-    #};
-
-    displayManager.noctalia-greeter = {
-      enable = true;
-      settings = {
-        appearance.scheme = "Synced";
-        cursor.size = 24;
-        keyboard.layout = "us";
-        output.name = "ASUSTek COMPUTER INC XG27JCG";
-      };
-      cursorTheme = {
-        package = pkgs.bibata-cursors;
-        name = "Bibata-Modern-Ice";
-      };
-    };
-
-    desktopManager.plasma6.enable = true;
     printing.enable = true;
 
     pulseaudio.enable = false;

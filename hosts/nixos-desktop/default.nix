@@ -1,4 +1,5 @@
 {
+  pkgs,
   ...
 }:
 
@@ -62,6 +63,15 @@
   };
 
   services = {
+    displayManager = {
+      autoLogin = {
+        enable = true;
+        user = "bduck";
+      };
+
+      defaultSession = "plasma";
+    };
+
     openssh = {
       enable = true;
       openFirewall = true;
