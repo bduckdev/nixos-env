@@ -18,11 +18,12 @@ config/herdr/*.json
 config/herdr/*.sock*
 config/herdr/session-snapshots/
 config/herdr/sessions/
-config/hypr/noctalia.lua
-config/kitty/themes/noctalia.conf
-config/kitty/current-theme.conf
-config/bat/themes/noctalia.tmTheme
-config/yazi/flavors/noctalia*
+# Commenting out for now. might change later. I want to see if this is ok
+#config/hypr/noctalia.lua
+#config/kitty/themes/noctalia.conf
+#config/kitty/current-theme.conf
+#config/bat/themes/noctalia.tmTheme
+#config/yazi/flavors/noctalia*
 
 # Backups
 *.bak

@@ -12,6 +12,7 @@ let
   assets = "${config.home.homeDirectory}/nixos-env/assets";
   create_symlink = path: config.lib.file.mkOutOfStoreSymlink path;
   configs = {
+    bat = "bat";
     delta = "delta";
     ghostty = "ghostty";
     herdr = "herdr";
