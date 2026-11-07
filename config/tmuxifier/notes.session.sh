@@ -8,4 +8,6 @@ if initialize_session "notes"; then
 	new_window 
 fi
 
+select_window 3
+
 finalize_and_go_to_session
