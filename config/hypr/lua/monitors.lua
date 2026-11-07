@@ -12,7 +12,7 @@ local Monitors = {
 -- sets up persistent workspaces. secondary_monitor is optional
 local function set_workspaces(primary_monitor, secondary_monitor)
 	for i = 1, 10 do
-		hl.workspace_rule({ monitor = primary_monitor, workspace = tostring(i), persistent = true })
+		hl.workspace_rule({ monitor = primary_monitor, workspace = tostring(i), default = i == 3, persistent = true })
 	end
 
 	if secondary_monitor == nil then
