@@ -23,6 +23,7 @@ vim.pack.add({
 		version = vim.version.range("*"),
 	},
 	{ src = "https://github.com/yousefhadder/markdown-plus.nvim" },
+	{ src = "https://github.com/HakonHarnes/img-clip.nvim" },
 })
 local function packadd(name)
 	vim.cmd("packadd " .. name)
@@ -46,6 +47,7 @@ packadd("oil.nvim")
 packadd("mini.icons")
 packadd("trouble.nvim")
 packadd("snacks.nvim")
+packadd("img-clip.nvim")
 
 require("bduck")
 require("colors")

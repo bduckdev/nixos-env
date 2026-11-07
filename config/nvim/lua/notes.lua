@@ -147,3 +147,17 @@ require("markdown-plus").setup({
 		},
 	},
 })
+
+-- img-clip saves clipboard images; Snacks.image (in ui.lua) renders them.
+require("img-clip").setup({
+	default = {
+		dir_path = "assets",
+		relative_to_current_file = true,
+		use_absolute_path = false,
+		prompt_for_file_name = false,
+	},
+})
+
+vim.keymap.set("n", "<leader>oi", "<cmd>PasteImage<CR>", {
+	desc = "Notes: Paste image from system clipboard",
+})

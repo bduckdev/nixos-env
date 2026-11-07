@@ -120,6 +120,11 @@ require("snacks").setup({
 
 	image = {
 		enabled = true,
+		doc = {
+			max_width = 40,
+			inline = true,
+			float = false,
+		},
 	},
 
 	notifier = {

@@ -29,7 +29,7 @@ vim.keymap.set("n", "<leader>fd", "silent <cmd>Finddir<CR>", {
 vim.keymap.set("n", "<leader>ff", function()
 	require("fzf-lua").files()
 end, { desc = "fzf-lua - Find files" })
-vim.keymap.set("n", "<leader>fs", function()
+vim.keymap.set("n", "<leader>fw", function()
 	require("fzf-lua").live_grep()
 end, { desc = "fzf-lua - Live grep" })
 

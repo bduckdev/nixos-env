@@ -86,6 +86,7 @@ vim.api.nvim_create_autocmd("BufWritePre", {
 		"*.h",
 		"*.hpp",
 		"*.nix",
+		"*.md",
 	},
 	callback = function(args)
 		-- avoid formatting non-file buffers (helps prevent weird write prompts)
