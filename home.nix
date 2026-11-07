@@ -12,7 +12,6 @@ let
   assets = "${config.home.homeDirectory}/nixos-env/assets";
   create_symlink = path: config.lib.file.mkOutOfStoreSymlink path;
   configs = {
-    bat = "bat";
     delta = "delta";
     ghostty = "ghostty";
     herdr = "herdr";
@@ -180,19 +179,8 @@ in
 
   qt = {
     enable = true;
-    platformTheme.name = "qtct";
-
-    qt5ctSettings.Appearance = {
-      style = "Fusion";
-      custom_palette = true;
-      color_scheme_path = "${config.xdg.configHome}/qt5ct/colors/noctalia.conf";
-    };
-
-    qt6ctSettings.Appearance = {
-      style = "Fusion";
-      custom_palette = true;
-      color_scheme_path = "${config.xdg.configHome}/qt6ct/colors/noctalia.conf";
-    };
+    # Noctalia's kcolorscheme template updates kdeglobals and notifies Qt apps.
+    platformTheme.name = "kde";
   };
 
   home.packages = with pkgs; [
@@ -249,6 +237,7 @@ in
     pavucontrol
     pi-coding-agent
     prettierd
+    proton-vpn
     protonup-qt
     python3
     obsidian
@@ -260,6 +249,7 @@ in
     satty
     seer
     slurp
+    sone
     spacetimedb
     statix
     stremio-linux-shell
