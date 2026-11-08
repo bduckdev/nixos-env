@@ -30,7 +30,7 @@ function Monitors.update()
 
 	for _, monitor in ipairs(hyprland_monitors) do
 		-- it would be nicer to check for caldigit, but checking for asus is fine
-		if monitor.description:find(asus_27inch_5k, 1, true) then
+		if monitor.description:find(asus_27inch_5k:gsub("^desc:", ""), 1, true) then
 			docked = true
 			break
 		end
@@ -70,7 +70,7 @@ function Monitors.setup(hostname)
 
 	hl.monitor({
 		output = asus_27inch_5k,
-		mode = "5120x2880@120",
+		mode = "5120x2880@60",
 		position = "auto",
 		scale = 2,
 	})
