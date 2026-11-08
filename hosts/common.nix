@@ -67,7 +67,14 @@
       withUWSM = true;
     };
     dconf.enable = true;
-    noctalia.enable = true;
+    noctalia = {
+      enable = true;
+      recommendedServices.enable = true;
+      systemd = {
+        enable = true;
+        target = "wayland-session@hyprland.desktop.target";
+      };
+    };
     zsh.enable = true;
   };
 
