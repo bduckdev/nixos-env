@@ -1,3 +1,4 @@
+local hostname = require("lua/hostname")
 -- Handles monitor setup and workspace assignment
 local builtin = "eDP-1"
 local asus_27inch_5k = "desc:ASUSTek COMPUTER INC XG27JCG"
@@ -88,6 +89,11 @@ function Monitors.setup(hostname)
 	hl.on("monitor.removed", Monitors.update)
 
 	Monitors.update()
+end
+
+function Monitors.toggle_secondary()
+	Monitors.secondary_enabled = not Monitors.secondary_enabled
+	Monitors.setup(hostname)
 end
 
 return Monitors

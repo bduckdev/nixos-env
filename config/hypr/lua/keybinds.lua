@@ -1,11 +1,16 @@
+local monitors = require("lua/monitors")
+local appearance = require("lua/appearance")
+
 local mainMod = "SUPER" -- Sets "Windows" key as main modifier
 
 local terminal = "kitty"
 local fileManager = terminal .. " -e yazi"
+local aiChat = "firefox --new-window chatgpt.com"
 local ipc = "noctalia msg "
 
 -- Example binds, see https://wiki.hypr.land/Configuring/Basics/Binds/ for more
 hl.bind(mainMod .. " + T", hl.dsp.exec_cmd(terminal))
+hl.bind(mainMod .. " + A", hl.dsp.exec_cmd(aiChat))
 hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(fileManager))
 hl.bind(mainMod .. " + RETURN", hl.dsp.exec_cmd(terminal))
 local closeWindowBind = hl.bind(mainMod .. " + SHIFT + Q", hl.dsp.window.close())
@@ -18,7 +23,7 @@ hl.bind(mainMod .. " + F", hl.dsp.window.fullscreen({ mode = "fullscreen", actio
 hl.bind(mainMod .. " + Z", hl.dsp.window.fullscreen({ mode = "maximized", action = "toggle" }))
 hl.bind(mainMod .. " + SHIFT + F", hl.dsp.window.float({ action = "toggle" }))
 --hl.bind(mainMod .. " + P", hl.dsp.window.pseudo())
-hl.bind(mainMod .. " + V", hl.dsp.layout("togglesplit")) -- dwindle only
+--hl.bind(mainMod .. " + V", hl.dsp.layout("togglesplit")) -- dwindle only
 
 -- Move focus with mainMod + Vim keys
 hl.bind(mainMod .. " + H", hl.dsp.focus({ direction = "left" }))
@@ -87,7 +92,6 @@ hl.bind("CTRL + SHIFT + 3", hl.dsp.exec_cmd("noctalia msg screenshot-fullscreen"
 hl.bind("CTRL + SHIFT + 4", hl.dsp.exec_cmd("noctalia msg screenshot-region"))
 
 -- Toggle Secondary Monitor
-hl.bind("CTRL + SHIFT + M", function()
-	monitors.secondary_enabled = not monitors.secondary_enabled
-	monitors.setup(hostname)
-end)
+hl.bind("CTRL + SHIFT + M", monitors.toggle_secondary)
+
+hl.bind(mainMod .. "+ SHIFT + A", appearance.toggle_fancy_animations_and_gaps)
