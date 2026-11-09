@@ -1,11 +1,12 @@
 local mainMod = "SUPER" -- Sets "Windows" key as main modifier
 
 local terminal = "kitty"
-local fileManager = "yazi"
+local fileManager = terminal .. " -e yazi"
 local ipc = "noctalia msg "
 
 -- Example binds, see https://wiki.hypr.land/Configuring/Basics/Binds/ for more
 hl.bind(mainMod .. " + T", hl.dsp.exec_cmd(terminal))
+hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(fileManager))
 hl.bind(mainMod .. " + RETURN", hl.dsp.exec_cmd(terminal))
 local closeWindowBind = hl.bind(mainMod .. " + SHIFT + Q", hl.dsp.window.close())
 closeWindowBind:set_enabled(true)
