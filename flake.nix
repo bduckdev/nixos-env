@@ -19,6 +19,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    nur = {
+      url = "github:nix-community/NUR";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     spicetify-nix = {
       url = "github:Gerg-L/spicetify-nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -57,7 +62,7 @@
 
                 extraSpecialArgs = { inherit inputs; };
 
-                users.bduck = import ./home.nix;
+                users.bduck = import ./home/linux.nix;
 
                 sharedModules = [
                   inputs.spicetify-nix.homeManagerModules.spicetify
@@ -71,6 +76,28 @@
       nixosConfigurations = {
         nixos-desktop = mkHost ./hosts/nixos-desktop;
         nixos-laptop = mkHost ./hosts/nixos-laptop;
+      };
+
+      darwinConfigurations.macbook = inputs.nix-darwin.lib.darwinSystem {
+        specialArgs = { inherit inputs; };
+
+        modules = [
+          ./hosts/macbook
+
+          home-manager.darwinModules.home-manager
+
+          {
+            home-manager = {
+              useGlobalPkgs = true;
+              useUserPackages = true;
+              backupFileExtension = "backup";
+
+              extraSpecialArgs = { inherit inputs; };
+
+              users.bduck = import ./home/darwin.nix;
+            };
+          }
+        ];
       };
     };
 }

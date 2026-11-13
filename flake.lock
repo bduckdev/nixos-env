@@ -1,5 +1,26 @@
 {
   "nodes": {
+    "flake-parts": {
+      "inputs": {
+        "nixpkgs-lib": [
+          "nur",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1733312601,
+        "narHash": "sha256-4pDvzqnegAfRkPwO3wmwBhVi/Sye1mzps0zHWYnP88c=",
+        "owner": "hercules-ci",
+        "repo": "flake-parts",
+        "rev": "205b12d8b7cd4802fbcb8e8ef6a0f1408781a4f9",
+        "type": "github"
+      },
+      "original": {
+        "owner": "hercules-ci",
+        "repo": "flake-parts",
+        "type": "github"
+      }
+    },
     "helium": {
       "inputs": {
         "nixpkgs": [
@@ -94,12 +115,34 @@
         "type": "github"
       }
     },
+    "nur": {
+      "inputs": {
+        "flake-parts": "flake-parts",
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1794254488,
+        "narHash": "sha256-/tP0AsBmOF1Wr6eeeoJYy09ol4cg5eRmjeMlm0ZG6Wk=",
+        "owner": "nix-community",
+        "repo": "NUR",
+        "rev": "ea463c42269ef4118845ab51f3a1ea55dcd63386",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "NUR",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "helium": "helium",
         "home-manager": "home-manager",
         "nixpkgs": "nixpkgs",
         "noctalia": "noctalia",
+        "nur": "nur",
         "spicetify-nix": "spicetify-nix"
       }
     },

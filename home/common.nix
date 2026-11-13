@@ -29,61 +29,17 @@ in
 {
   imports = [
     ./modules/tmux.nix
+    ./modules/firefox.nix
     ./modules/zsh.nix
   ];
   home = {
     username = "bduck";
-    homeDirectory = "/home/bduck";
     file = {
-      ".face".source = ./assets/face.jpg;
+      ".face".source = ../assets/face.jpg;
       "Pictures/Wallpapers".source = create_symlink "${assets}/wallpapers";
       ".tmux-layouts".source = create_symlink "${dotfiles}/tmuxifier";
       ".local/bin".source = create_symlink "${dotfiles}/scripts";
       ".pi".source = create_symlink "${dotfiles}/pi";
-    };
-  };
-
-  # The plugin registry is machine-local; install Sessionizer after linking configs.
-  home.activation.herdrSessionizer = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
-    run ${pkgs.coreutils}/bin/env \
-      PATH="${
-        lib.makeBinPath [
-          pkgs.herdr
-          pkgs.bun
-          pkgs.nodejs
-          pkgs.git
-          pkgs.jq
-          pkgs.fzf
-        ]
-      }:$PATH" \
-      ${pkgs.bash}/bin/bash "${dotfiles}/scripts/herdr-sessionizer-setup"
-  '';
-
-  gtk = {
-    enable = true;
-    colorScheme = "dark";
-
-    theme = {
-      name = "Adwaita-dark";
-      package = pkgs.gnome-themes-extra;
-    };
-
-    iconTheme = {
-      name = "Adwaita";
-      package = pkgs.adwaita-icon-theme;
-    };
-
-    cursorTheme = {
-      name = "Adwaita";
-      package = pkgs.adwaita-icon-theme;
-    };
-  };
-
-  dconf = {
-    enable = true;
-
-    settings."org/gnome/desktop/interface" = {
-      color-scheme = "prefer-dark";
     };
   };
 
@@ -108,7 +64,7 @@ in
 
       extraPackages = [
         pkgs.imagemagick
-        pkgs.ghostscript # Required only when rendering PDF files
+        pkgs.ghostscript
       ];
     };
 
@@ -169,26 +125,10 @@ in
       ];
       theme = spicePkgs.themes.text;
     };
-
-  };
-
-  services = {
-    easyeffects = {
-      enable = true;
-    };
-  };
-
-  qt = {
-    enable = true;
-    # Noctalia's kcolorscheme template updates kdeglobals and notifies Qt apps.
-    platformTheme.name = "kde";
   };
 
   home.packages = with pkgs; [
-    adw-gtk3
     bat
-    blanket
-    bottles
     bun
     clang
     clang-manpages
@@ -204,63 +144,47 @@ in
     eza
     fastfetch
     fd
-    firefox
     fzf
-    gdb
     ghostty
     gnumake
     go
     gofumpt
     gopls
     herdr
-    heroic
     imagemagick
     jetbrains.goland
     jetbrains.idea
     jq
     kitty
     lazygit
-    linux-wallpaperengine
     lua5_1
     lua-language-server
     luarocks
     man-pages
-    mgba
-    mpvpaper
-    lutris
     nil
     nix-output-monitor
     nixfmt
     ninja
     nodejs
-    nvd
     obs-studio
     pavucontrol
     pi-coding-agent
     prettierd
     proton-vpn
-    protonup-qt
     python3
     obsidian
     readest
-    retroarch
     revive
     ripgrep
     rustup
-    satty
-    seer
-    slurp
-    sone
     spacetimedb
     statix
-    stremio-linux-shell
     swayimg
     stylua
     tailwindcss
     television
     telegram-desktop
     templ
-    tetrio-desktop
     tldr
     tmuxifier
     tree-sitter

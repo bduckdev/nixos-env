@@ -56,7 +56,6 @@
 
   networking.extraHosts = ''
     0.0.0.0 bing.com
-    0.0.0.0 youtube.com
   '';
 
   security.rtkit.enable = true;
@@ -126,6 +125,7 @@
   };
 
   nixpkgs.config.allowUnfree = true;
+  nixpkgs.overlays = [ inputs.nur.overlays.default ];
   nix.settings.experimental-features = [
     "nix-command"
     "flakes"
@@ -134,4 +134,12 @@
   fonts.packages = [
     pkgs.nerd-fonts.jetbrains-mono
   ];
+
+  systemd.tmpfiles.settings."10-noctalia-chromium"."/etc/chromium/policies/managed/noctalia-color.json".f =
+    {
+      user = "bduck";
+      group = "users";
+      mode = "0644";
+      argument = "{}";
+    };
 }
