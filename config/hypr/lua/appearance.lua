@@ -1,5 +1,7 @@
+local hostname = require("lua/hostname")
+
 local A = {
-	use_fancy_animations_and_gaps = false,
+	use_fancy_animations_and_gaps = hostname ~= "nixos-laptop",
 }
 
 function A.setup()
@@ -7,7 +9,7 @@ function A.setup()
 		general = {
 			border_size = A.use_fancy_animations_and_gaps and 2 or 1,
 			gaps_in = A.use_fancy_animations_and_gaps and 5 or 0,
-			gaps_out = A.use_fancy_animations_and_gaps and 10 or 0,
+			gaps_out = A.use_fancy_animations_and_gaps and 15 or 0,
 
 			resize_on_border = false,
 
