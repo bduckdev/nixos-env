@@ -117,6 +117,8 @@
       bind-key -r L resize-pane -R 10
 
       # Catppuccin window formatting
+      # Disable tmux 3.8's default underline on the active window.
+      setw -g window-status-current-style default
 
       # Status bar
       set -g status-justify absolute-centre

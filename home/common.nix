@@ -177,7 +177,7 @@ in
     revive
     ripgrep
     rustup
-    spacetimedb
+    # spacetimedb takes 15 years to compile
     statix
     swayimg
     stylua
@@ -192,7 +192,7 @@ in
     unzip
     wlr-randr
     yazi
-    zotero
+    #zotero # disabled because dependency is eol atm
     zoxide
     inputs.helium.packages.${system}.default
   ];
