@@ -1,4 +1,7 @@
 { pkgs, ... }:
+let
+  baseIndex = 3;
+in
 {
   programs.tmux = {
     enable = true;
@@ -7,7 +10,7 @@
     mouse = true;
     terminal = "tmux-256color";
 
-    baseIndex = 3;
+    inherit baseIndex;
 
     focusEvents = true;
 
@@ -64,16 +67,18 @@
       set -g repeat-time 150
       set -g visual-activity off 
 
-
       set -g extended-keys on
       set -g extended-keys-format csi-u
 
-      #set -g status-position top
-      bind-key o display-popup -E -d '#{pane_current_path}' -w 80% -h 80% "exec nvim -c 'Obsidian today'"
-      bind-key g display-popup -E -d '#{pane_current_path}' -w 80% -h 80% "exec lazygit"
+      unbind s
+      bind-key s choose-tree -ZsK '#{e|+:${toString baseIndex},#{line}}'
+      unbind w
+      bind-key w display-pop -E -d '#{pane_current_path}' -w 98% -h 98% '$SHELL -f -c "workmux dashboard -t worktrees"'
+      bind-key g display-popup -E -d '#{pane_current_path}' -w 98% -h 98% '$SHELL -f -c lazygit'
+      bind-key a display-popup -E -d '#{pane_current_path}' -w 98% -h 98% '$SHELL -f -c "workmux dashboard"'
       unbind t
-      bind t display-popup -E -w 80% -h 80% "$SHELL -f"
-
+      bind t display-popup -E -w 80% -h 80% '$SHELL -f'
+      unbind f 
 
       set -g set-clipboard on
 
